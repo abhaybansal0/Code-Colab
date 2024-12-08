@@ -3,8 +3,11 @@
     "start": "concurrently \"npm run dev --prefix frontend\" \"nodemon backend/server.js\""
   },
   "type": "module",
-  
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "@codemirror/theme-one-dark": "^6.1.2",
+    "react-codemirror6": "^1.1.0"
   }
 }
