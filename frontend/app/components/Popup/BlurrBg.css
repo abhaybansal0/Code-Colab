@@ -1,0 +1,17 @@
+.animateme{
+    transition: all 0.3s ease-in-out;
+}
+.animateme:disabled:hover{
+    transform: none;
+}
+
+
+
+/* @keyframes pulse {
+    50% {
+        opacity: .5;
+    }
+}
+.animate-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+} */

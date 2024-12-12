@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #000000;
+  --foreground: #ededed;
+  /* #09090b  color for big components*/
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+/* Custom scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: black transparent; /* Firefox */
+}
+
+::-webkit-scrollbar {
+  width: 8px;  /* Width of the scrollbar */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: black; /* Slider color */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent; /* No background color for the track */
+}
+
+/* Hide scrollbar arrow buttons */
+::-webkit-scrollbar-button {
+  display: none; /* Hides the arrow buttons */
+}
+
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+
+
+.glow{
+  transition: all 0.3s ease-in-out;
+}
+
+.glow:hover{
+  transform: scale(1.1);
+  box-shadow: -1px 3px 7px #2563EB;
+}
+
+.bg-0D0D0D{
+  background-color: #0d0d0d;
+}
+
+.bg-09090b{
+  background-color: #09090b;
+}
+
+.border-gray{
+  border: 1px solid #27272a;
+}
+
+.text-8a8a93{
+  color: #8a8a93;
+}
+
+.inputField{
+  padding: 0.5rem;
+  border: 1px solid #27272a;
+  border-radius: 0.5rem;
+  background-color: inherit;
+  color: #a1a1aa;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.btn-white{
+  padding: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background-color: #fafafa;
+  color: #18181b;
+  transition: background-color 0.3s;
+}
+.btn-white:disabled{
+  background-color: #cccccc ;
+  cursor:not-allowed;
+}
+.btn-white:disabled:hover{
+  background-color: #cccccc ;
+}
+.btn-white:hover{
+  background-color: #e6e6e6 ;
+}

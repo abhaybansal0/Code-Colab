@@ -1,0 +1,14 @@
+textarea {
+    border: 0px; /* Normal border */
+    padding: 10px;
+    background-color: #fff; /* Set a neutral background color */
+    user-select: none;
+    
+  }
+
+textarea:focus{
+    outline: none; /* Removes the default focus outline */
+    border: none;  /* Removes the border if needed */
+    background-color: transparent; /* Keeps background transparent */
+    box-shadow: none;
+}
