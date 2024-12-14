@@ -20,7 +20,7 @@ import Navbarmeet from './_comps/Navbarmeet';
 const CodeEditor = dynamic(() => import('./_comps/CodeEdittor'), { ssr: false });
 
 
-const page = () => {
+const Page = () => {
 
 
   const router = useRouter()
@@ -314,5 +314,5 @@ const page = () => {
   )
 }
 
-export default page
+export default Page
 

@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
-const page = () => {
+const Page = () => {
 
     const params = useSearchParams();
     const id = params.get("id");
@@ -128,4 +128,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
