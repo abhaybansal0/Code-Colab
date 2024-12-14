@@ -1,7 +1,6 @@
 {
   "scripts": {
-    "start": "nodemon \"backend/server.js\" ",
-    "run": "concurrently \"npm run dev --prefix frontend\" \"nodemon backend/server.js\""
+    "start": "concurrently \"npm run dev --prefix frontend\" \"nodemon backend/server.js\""
   },
   "type": "module",
   "devDependencies": {

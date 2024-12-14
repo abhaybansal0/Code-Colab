@@ -8,10 +8,10 @@ const Navbar = ({ Join_Hide_Show_Handler, Start_Hide_Show_Handler }) => {
     return (
         <nav className='w-full   flex fixed bottom-4 '>
 
-            <div className=' navbar flex gap-5 mx-auto  bg-141B2B border-0 rounded-2xl'>
+            <div className=' navbar flex gap-5 mx-auto  bg-141B2B border-0 rounded-2xl !pl-4'>
 
-                <div className="logo">
-                    <img src="homo" alt="logo" />
+                <div className=" flex items-center justify-center">
+                    <img src="../logo.svg" alt="logo" />
                 </div>
                 <div className="navcontent h-full">
                     <ul className='flex gap-4 h-full'>

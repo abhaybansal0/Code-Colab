@@ -15,8 +15,8 @@ const Navbarmeet = ({ bringpreview }) => {
                 <div className=' navbar flex gap-5    border-0 rounded-2xl '>
 
                     <Link href="/">
-                        <div className="logo">
-                            <img src="homo" alt="logo" />
+                        <div className="logo flex items-center justify-center">
+                            <img src="../logo.svg" alt="logo" />
                         </div>
                     </Link>
 

@@ -129,5 +129,5 @@ app.use((req, res) => {
 });
 
 server.listen(5000, () => {
-    console.log('Backend & Server running on http://localhost:5000');
+    console.log(`Backend & Server running on ${process.env.BACKEND_DOMAIN}`);
 });

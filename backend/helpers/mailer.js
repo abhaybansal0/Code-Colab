@@ -55,8 +55,8 @@ const sendMail = async ({ email, mailtype, userId }) => {
         const mailOptions = {
             from: 'codecolab.app@gmail.com', // sender address
             to: email,
-            subject: "Hello ✔", // Subject line
-            text: "Hello world?", // plain text body
+            subject: "Email Verification", // Subject line
+            text: "Please Verify", // plain text body
 
 
             html: `

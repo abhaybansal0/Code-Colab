@@ -6,6 +6,7 @@ import Start_PopUp from './components/Popup/Start_Popup';
 import Join_Popup from './components/Popup/Join_PopUp';
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 
@@ -20,6 +21,7 @@ export default function Home() {
     const [show_Popup, setShow_Popup] = useState('Nill');
     const [loggedIn, setLoggedIn] = useState(false);
     const [Error, setError] = useState(null)
+    const [loaded, setLoaded] = useState(false)
 
     // Meeting Id
     const [codeid, setCodeid] = useState();
@@ -45,13 +47,17 @@ export default function Home() {
                 const response = await axios.post('/api/me')
                 const data = response.data;
                 console.log(data)
+                setLoggedIn(true)
 
             } catch (error) {
+                setLoggedIn(false)
                 setError(error)
                 console.log(error)
             }
         }
         getData();
+
+        setLoaded(true)
 
     }, []);
 
@@ -80,7 +86,7 @@ export default function Home() {
 
         // () => router.push(`/codemeet/holdup/${codeid}`)
         try {
-            
+
             // The admin id will be taken by my token
             // Sending Meet Data to be saved
             const link = generateALink();
@@ -99,7 +105,7 @@ export default function Home() {
 
         } catch (error) {
             // console.log(error)
-            if(error.response.data.message ==='Token expired. Please login again.'){
+            if (error.response.data.message === 'Token expired. Please login again.') {
                 console.log('Session Expired, Login Again')
             }
         }
@@ -128,14 +134,65 @@ export default function Home() {
 
             {/* <img src="./eyes.jpg" alt="and img" className='w-screen h-screen absolute -z-10 object-cover' /> */}
 
-            <div className="" id='home'>
 
 
-                <div>{message ? message : 'Loading...'}</div>
-                <StartMeet startAMeet={startAMeet} value={'Start Code Meet'} />
-            </div>
 
-            <button onClick={logmeout}>Log Out</button>
+
+            <div className="text-center" id='home'>
+
+                <div className="topbar w-screen flex justify-between p-8 px-16 text-sm">
+
+                    {loggedIn ? (
+
+                        <Link href="/login">
+                            <button className={`btn-black !px-4 border rounded-3xl border-gray
+                                ${!loaded ? '-scale-50' : ''}
+                                `}>
+                                Login
+                            </button>
+                        </Link>
+
+                    ) : (
+
+                        < Link href="/logout">
+                            <button onClick={logmeout}
+                                className={`btn-black !px-4 border rounded-3xl border-gray
+                             ${!loaded ? '-scale-50' : ''}
+                             `}>
+                                Logout
+                            </button>
+                        </Link>
+                    )
+                    }
+
+                    <button>
+                        <img src="../logo.svg" alt="" />
+                    </button>
+
+                    <Link href="/signup">
+                        <button className={`btn-black !px-4 border rounded-3xl border-gray
+                            ${!loaded ? '-scale-50' : ''}
+                            `}>
+                            Signup
+                        </button>
+                    </Link>
+                </div>
+
+
+                <div className="home flex flex-col justify-center items-center gap-14">
+                    <h1 className='text-5xl'>Code Colab</h1>
+
+                    <div className='text-md text-8a8a93 mt-24'>
+                        <p className='w-2/4 mx-auto text-center'>
+
+                            Collaborate Anywhere! In Real-Time with Coders Across the Globe.
+                            Bring your team into one virtual meeting room and code seamlessly together. Whether you're debugging, brainstorming, or building the next big thing, Code Colab
+                        </p>
+                    </div>
+                    <StartMeet startAMeet={startAMeet} value={'Start Code Meet'} />
+                </div>
+            </div >
+
 
         </>
     );
