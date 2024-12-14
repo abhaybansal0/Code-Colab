@@ -1,6 +1,7 @@
 import dbconnect from '../../dbConfig/dbConfig.js'
 import { Router } from 'express'
 import Meeting from '../../models/meet.js'
+import jwt from 'jsonwebtoken'
 
 
 const router = Router();
@@ -11,16 +12,27 @@ router.post('/', async (req, res) => {
 
     try {
 
-        const { meetId, adminId, codebase} = req.body;
-        console.log(meetId, adminId, codebase);
+        const token = req.cookies.token;
+        const { meetId, codebase} = req.body;
+        console.log(meetId, token, codebase);
         
-        
-        const meetexists = await Meeting.findOne({meetId: meetId, adminId: adminId})
-        if(meetexists) {
-            res.status(400).send({error: 'Meeting Already Exists'})
-            return
+
+        if(!token){
+            return res.status(400).send({message: "Please Log In First"})
         }
         
+        
+        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
+
+        const adminId = decodedToken.id; 
+        console.log(adminId);
+        
+        
+        
+        const meetexists = await Meeting.findOne({meetId: meetId})
+        if(meetexists) {
+           return  res.status(400).send({error: 'Meeting Already Exists this is only for server side'})
+        }
 
         const newMeet = await new Meeting({
             meetId: meetId,

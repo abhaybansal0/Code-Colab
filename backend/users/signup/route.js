@@ -21,21 +21,30 @@ router.post('/verify', async (req, res) => {
         //Validation
 
 
-        const user = await User.findOne({email});
+        const emailExists = await User.findOne({email});
+        if(emailExists) {
+            return res.status(400).send({message: 'Username already Exists'});
+        }
 
-        if(user) {
-            return res.status(200).send({error: 'User already Exists'});
+        const usernameNotAv = await User.findOne({username})
+        if(usernameNotAv){
+            return res.status(400).send({message: 'Username Not Available!'})
         }
         
 
         const salt = await bcryptjs.genSalt(10);
         const hashedPassword = await bcryptjs.hash(password, salt)
 
-
+        let admin=false
+        if(email === "abhaybansal127@gmail.com" || email === "27abhay.bansal@gmail.com"){
+            admin = true;
+        }
+        
         const newUser = new User({
             username: username,
             email: email,
-            password: hashedPassword
+            password: hashedPassword,
+            isAdmin: admin
         })
         
         const savedUser = await newUser.save();

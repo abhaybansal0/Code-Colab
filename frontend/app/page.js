@@ -81,21 +81,11 @@ export default function Home() {
         // () => router.push(`/codemeet/holdup/${codeid}`)
         try {
             
-            // get my Id
-            const res1 = await axios.post('/api/me')
-            console.log( res1.data.data._id)
-
-            const myid = res1.data.data._id;
-
-            if(!myid){
-                console.log('Login Please')
-                return
-            }
+            // The admin id will be taken by my token
             // Sending Meet Data to be saved
             const link = generateALink();
             const meetDetails = {
                 meetId: link,
-                adminId: myid,
                 codebase: ''
             }
 

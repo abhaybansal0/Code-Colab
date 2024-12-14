@@ -17,7 +17,7 @@ const Navbar = ({ Join_Hide_Show_Handler, Start_Hide_Show_Handler }) => {
                     <ul className='flex gap-4 h-full'>
                         <Link href=""><li>Home</li></Link>
                         <Link href=""><li>About</li></Link>
-                        <Link href="/home"><li>Edditor</li></Link>
+                        <Link href="/"><li>Edditor</li></Link>
                     </ul>
                 </div>
                 <div className="buttons flex gap-2 p-1.5">

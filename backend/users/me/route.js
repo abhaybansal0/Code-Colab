@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
         const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
         
         if(token === "") {
-           res.status(400).send({error: "User Not found or Not loged In"})
+           res.status(400).send({error: "User Not loged In"})
         }
 
         const userId = decodedToken.id;

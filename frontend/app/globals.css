@@ -14,30 +14,30 @@
     --foreground: #ededed;
   }
 } */
-
-/* Custom scrollbars */
+/* Remove scrollbars completely */
+/* Custom scrollbar for a subtle black appearance */
 * {
-  scrollbar-width: thin;
-  scrollbar-color: black transparent; /* Firefox */
+  scrollbar-width: thin; /* Firefox: thin scrollbar */
+  scrollbar-color: rgba(0, 0, 0, 0.4) transparent; /* Firefox: black with slight transparency */
 }
 
 ::-webkit-scrollbar {
-  width: 8px;  /* Width of the scrollbar */
+  width: 8px; /* Adjust width for the scrollbar */
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: black; /* Slider color */
-  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.4); /* Subtle black thumb with transparency */
+  border-radius: 10px; /* Rounded scrollbar thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.6); /* Slightly darker thumb on hover */
 }
 
 ::-webkit-scrollbar-track {
-  background-color: transparent; /* No background color for the track */
+  background-color: transparent; /* Transparent background for the track */
 }
 
-/* Hide scrollbar arrow buttons */
-::-webkit-scrollbar-button {
-  display: none; /* Hides the arrow buttons */
-}
 
 
 body {
@@ -89,8 +89,17 @@ body {
   padding-right: 1rem;
   background-color: #fafafa;
   color: #18181b;
-  transition: background-color 0.3s;
+  transition: all 0.3s ease-in-out;
 }
+
+.btn-black{
+  padding: 0.5rem;
+  border: 1px solid #27272a;
+  background-color: #000000;
+  color: #8a8a93;
+  transition: all 0.3s ease-in-out;
+}
+
 .btn-white:disabled{
   background-color: #cccccc ;
   cursor:not-allowed;

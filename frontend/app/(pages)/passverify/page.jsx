@@ -2,12 +2,14 @@
 import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
-import './utils.css'
+import '../verification/utils.css'
 import { useRouter, useSearchParams } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 
 
 const page = () => {
+
 
     const router = useRouter();
 
@@ -15,7 +17,7 @@ const page = () => {
 
     const searchParams = useSearchParams();
     const token = searchParams.get("token");
-
+    // console.log(token)
 
 
 
@@ -23,24 +25,28 @@ const page = () => {
         try {
             e.preventDefault()
             setVerifystatus('verifing')
-            console.log('till here')
 
 
-            const response = await axios.post(`/api/verifyemail/verifyme?token=${token}`)
+            const response = await axios.post(`api/verifypassword/forgot?token=${token}`)
 
-            console.log("Signup success!", response.data)
+            // console.log("Signup success!", response.data.message)
+            const id = response.data._id
 
             setTimeout(() => {
                 setVerifystatus('verified')
-            }, 5000);
+                toast.success("Verified Successfully!")
+
+            }, 2000);
 
             setTimeout(() => {
-                router.push('/login');
-
-            }, 6500);
+                router.push(`/passverify/changepassword?id=${id}`);
+            }, 3000);
 
         } catch (error) {
             console.log('Error Singingup', error)
+            setVerifystatus('nill')
+            toast.error("Verification Failed")
+
         }
     }
 
@@ -57,11 +63,11 @@ const page = () => {
 
                 <h1 className='text-2xl text-center '>Verification</h1>
 
-                <p className='mt-2 mb-6  text-8a8a93'>Click the below button to verfy your Email Id</p>
+                <p className='mt-2 mb-6  text-8a8a93'>Please Verify in order to change your credentials</p>
 
                 <button
                     className={`btn-white verify-btn mt-6 rounded-xl !px-8 
-                            ${verifystatus === 'verifing' ? 'animate-pulse' : ''}`}
+                        ${verifystatus === 'verifing'? 'animate-pulse' : '' }`} 
                     onClick={verifyMe}>
                     {
                         verifystatus === 'nill' ? 'Verify Me' : (

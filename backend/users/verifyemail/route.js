@@ -22,7 +22,7 @@ router.post('/verifyme', async (req, res) => {
         console.log(user);
         
         if (!user) {
-            res.status(400).send({ msg: 'No user found or Is Verified' });
+            res.status(400).send({ message: 'No user found or Is Verified' });
             return
         }
 

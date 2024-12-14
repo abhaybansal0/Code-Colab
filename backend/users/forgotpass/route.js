@@ -1,48 +1,64 @@
+import dbconnect from '../../dbConfig/dbConfig.js'
 import { Router } from 'express'
-import dbconnect from '../../dbConfig/dbConfig.js';
-import User from '../../models/user.js';
+import User from '../../models/user.js'
+import sendMail from '../../helpers/mailer.js'
 
 const router = Router();
+
 
 dbconnect();
 
 
-router.post('/verifyme', async (req, res) => {
-    // console.log('The user shoudl be verified');
 
-    try {        
+router.post('/', async (req, res) => {
 
+    try {
         const reqBody = req.body;
 
-        const token  = req.query.token;
-        
-        
+        const { usernameEmail } = reqBody;
 
-        const user = await User.findOne({ verifyToken: token, verifyTokenExpiry: { $gt: Date.now() } })
-        console.log(user);
+        let user;
         
-        if (!user) {
-            res.status(400).send({ msg: 'No user found or Is Verified' });
-            return
+        //Validation
+        const username = await User.findOne({ username: usernameEmail })
+        const email = await User.findOne({ email: usernameEmail })
+        
+        
+        if(username){
+            user=username
+        } else if(email) {
+            user=email
+        } else {
+            return res.status(400).send({message: "User Does Not Exists"})
         }
 
-        user.isVerified = true;
-        user.verifyToken = undefined;
-        user.verifyTokenExpiry = undefined;
+        if(!user){
+            return res.status(400).send({message: "User Not Found"})
+        }
 
-        await user.save();
-
+        const Mail = user.email
+        console.log(user);
+        
+        
+        //send Forgotpassword email
+        const mailType = "RESET";
+        const ID = user._id;
+        await sendMail({email: Mail, mailtype: mailType, userId: ID})
+        
+        
         res.status(200).send({
-            message: 'Email verified Successfully',
-            success: true
+            message: 'Forgotpassword Link Sent Successfully',
+            success: true,
+            useremail: Mail,
+            userid: ID
         })
+    
 
 
     } catch (error) {
-        console.log('Error in Verification', error);
-
+        return res.status(400).send({error: error.message})
     }
-
 })
 
-export default router
+
+export default router;

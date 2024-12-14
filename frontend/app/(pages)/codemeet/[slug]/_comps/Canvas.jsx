@@ -1,8 +1,12 @@
 import React from 'react'
+import './page.css'
 
-const Canvas = ({ children }) => {
+const Canvas = ({ children, value }) => {
   return (
-    <div className='w-1/2 min-h-full border-0 rounded-2xl bg-0D0D0D p-4 flex flex-col gap-4'>
+    <div className={`border-gray  w-1/2  border-0 rounded-2xl bg-0D0D0D
+      flex flex-col gap-4 terminalcanvas 
+     ${value? '!p-0' : 'p-4'}
+     `}>
       { children }
     </div>
   )

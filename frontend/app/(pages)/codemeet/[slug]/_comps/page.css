@@ -3,7 +3,6 @@ textarea {
     padding: 10px;
     background-color: #fff; /* Set a neutral background color */
     user-select: none;
-    
   }
 
 textarea:focus{
@@ -12,3 +11,48 @@ textarea:focus{
     background-color: transparent; /* Keeps background transparent */
     box-shadow: none;
 }
+
+.edittorNavbar{
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0) 100%);
+  /* backdrop-filter: blur(10px); */
+
+}
+
+
+.navcontent ul li{
+  text-align: center;
+  display: flex;
+  align-items: center;
+  padding: 7.6px 8px;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  height: 100%;
+
+}
+
+.navcontent ul li::after{
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg,  #000000, #d1d1d1, #000000);
+  border-radius: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.navcontent ul li:hover::after{
+  width: 100%;
+  left: 0;
+}
+
+
+.inputtext{
+  position: relative;
+}
+
+.terminal{
+  font-family: 'Fira Code', monospace;
+}
+
