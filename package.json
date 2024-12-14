@@ -6,5 +6,8 @@
   "type": "module",
   "devDependencies": {
     "concurrently": "^9.1.0"
+  },
+  "dependencies": {
+    "nodemon": "^3.1.9"
   }
 }
