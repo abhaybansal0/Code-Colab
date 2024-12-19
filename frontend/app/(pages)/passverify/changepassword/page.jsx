@@ -2,14 +2,12 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
 const Page = () => {
 
-    const params = useSearchParams();
-    const id = params.get("id");
+
 
     const router = useRouter();
 
@@ -29,6 +27,9 @@ const Page = () => {
 
     const changeMyPassword = async (e) => {
         try {
+            const params = new URLSearchParams(window.location.search);
+            const id = params.get("id");
+
             e.preventDefault()
             setLoading(true)
             setButtondisabled(true)
@@ -78,7 +79,7 @@ const Page = () => {
         <div className='w-scree h-screen flex justify-center items-center'>
 
             <div className="signup flex items-center justify-center
-            px-16  p-4 border-gray rounded-2xl">
+            px-16  p-4 border-gray rounded-2xl bg-black">
 
                 <form onSubmit={changeMyPassword} className='flex flex-col gap-8'>
 

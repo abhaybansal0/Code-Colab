@@ -116,6 +116,7 @@ export default function Home() {
         try {
             const res = await axios.get('/api/logout')
             console.log('User Logged Out', res)
+            setLoggedIn(false)
         } catch (error) {
             setError(error);
         }
@@ -142,7 +143,7 @@ export default function Home() {
 
                 <div className="topbar w-screen flex justify-between p-8 px-16 text-sm">
 
-                    {loggedIn ? (
+                    {!loggedIn ? (
 
                         <Link href="/login">
                             <button className={`btn-black !px-4 border rounded-3xl border-gray
@@ -154,14 +155,12 @@ export default function Home() {
 
                     ) : (
 
-                        < Link href="/logout">
                             <button onClick={logmeout}
                                 className={`btn-black !px-4 border rounded-3xl border-gray
                              ${!loaded ? '-scale-50' : ''}
                              `}>
                                 Logout
                             </button>
-                        </Link>
                     )
                     }
 
@@ -186,7 +185,7 @@ export default function Home() {
                         <p className='w-2/4 mx-auto text-center'>
 
                             Collaborate Anywhere! In Real-Time with Coders Across the Globe.
-                            Bring your team into one virtual meeting room and code seamlessly together. Whether you're debugging, brainstorming, or building the next big thing, Code Colab
+                            Bring your team into one virtual meeting room and code seamlessly together. Whether you&apos;re debugging, brainstorming, or building the next big thing, Colab your Code
                         </p>
                     </div>
                     <StartMeet startAMeet={startAMeet} value={'Start Code Meet'} />

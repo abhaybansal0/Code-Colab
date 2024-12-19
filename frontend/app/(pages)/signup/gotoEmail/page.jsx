@@ -5,7 +5,7 @@ const page = () => {
     <div className='w-scree h-screen flex justify-center items-center'>
 
       <div className="signup flex flex-col items-center justify-center
-    px-16  p-4 border-gray rounded-2xl">
+    px-16  p-4 border-gray rounded-2xl bg-black">
 
 
           <h1 className='text-2xl text-center'>

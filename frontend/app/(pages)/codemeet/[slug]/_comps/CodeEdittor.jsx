@@ -9,67 +9,67 @@ import { EditorView } from '@codemirror/view';
 
 // Custom theme with transparent background and modern styles
 const customTheme = EditorView.theme({
-  '&': {
-    backgroundColor: '#0d0d0d !important', // Dark background for the entire editor
+ '&': {
+    backgroundColor: 'transparent !important', // Pure black background for the entire editor
     borderRadius: '12px',
     padding: '10px',
     border: 'none',
   },
   '.cm-content': {
-    backgroundColor: '#0d0d0d !important', // Dark background for code content
-    color: '#d4d4d4', // Light text color for code
-    caretColor: '#ff79c6', // Caret color (pinkish)
+    backgroundColor: '#000000 !important', // Pure black background for code content
+    color: '#e0e0e0', // Slightly brighter text color for better contrast
+    caretColor: '#ff6ac1', // Caret color (vibrant pink)
   },
   '.cm-gutters': {
-    backgroundColor: 'transparent !important', // Darker gutter background
-    color: '#8b949e', // Gutter text color
+    backgroundColor: '#000000 !important', // Transparent gutter background
+    color: '#a1a1a1', // Lighter gray for gutter text
     border: 'none',
   },
   '.cm-cursor': {
-    borderLeftColor: '#ff79c6 !important', // Cursor color (pinkish)
+    borderLeftColor: '#ff6ac1 !important', // Cursor color (vibrant pink)
   },
   '.cm-activeLine': {
-    backgroundColor: '#2c2c2c !important', // Highlight active line with subtle color
+    backgroundColor: '#1a1a1a !important', // Highlight active line with a soft dark gray
   },
   '.cm-tooltip': {
-    backgroundColor: '#2d2d2d', // Tooltip background
-    color: '#d4d4d4', // Tooltip text color
+    backgroundColor: '#1e1e1e', // Tooltip background adjusted for black theme
+    color: '#e0e0e0', // Brighter tooltip text color
   },
   
   // Adjustments for better visibility in C++ syntax highlighting
   '.cm-keyword': {
-    color: '#ff79c6', // Keywords in bright pinkish color for contrast
+    color: '#ff6ac1', // Bright pink for keywords
   },
   '.cm-variable': {
-    color: '#f8f8f2', // Light color for variable names
+    color: '#ffffff', // White for variable names
   },
   '.cm-variable-2': {
-    color: '#f8f8f2', // Light color for second-level variables
+    color: '#ffffff', // White for second-level variables
   },
   '.cm-atom': {
-    color: '#8be9fd', // Light cyan for atomic elements (numbers, booleans)
+    color: '#79d3f4', // Bright cyan for atomic elements (numbers, booleans)
   },
   '.cm-comment': {
-    color: '#6272a4', // Darker blue for comments to stand out but not clash
+    color: '#5a5a5a', // Dark gray for comments to blend into the background
     fontStyle: 'italic', // Italicize comments for a subtle effect
   },
   '.cm-string': {
-    color: '#f1fa8c', // Light yellow for strings for better contrast
+    color: '#f3f99d', // Bright yellow-green for strings
   },
   '.cm-number': {
-    color: '#bd93f9', // Light purple for numbers
+    color: '#b482f7', // Vibrant purple for numbers
   },
   '.cm-function': {
-    color: '#50fa7b', // Green for function names to make them pop
+    color: '#50fa7b', // Bright green for function names
   },
   '.cm-tag': {
-    color: '#ffb86c', // Orange for HTML tags
+    color: '#ffa07a', // Coral orange for HTML tags
   },
   '.cm-class': {
-    color: '#ffb86c', // Orange for class names
+    color: '#ffa07a', // Coral orange for class names
   },
   '.cm-type': {
-    color: '#ffb86c', // Orange for type names
+    color: '#ffa07a', // Coral orange for type names
   },
 }, { dark: true });
 
@@ -99,7 +99,7 @@ const CodeEditor = ({ Code, onChange, language }) => {
         keymap.of(completionKeymap),         // Autocomplete support
       ]}
       onChange={onChange} // Handle changes in code
-      className='border-gray rounded-xl max-h-full'
+      className='border-gray rounded-xl max-h-full !terminal'
     />
   );
 };

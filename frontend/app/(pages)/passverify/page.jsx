@@ -3,7 +3,7 @@ import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
 import '../verification/utils.css'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
 
@@ -15,17 +15,19 @@ const Page = () => {
 
     const [verifystatus, setVerifystatus] = useState('nill')
 
-    const searchParams = useSearchParams();
-    const token = searchParams.get("token");
+
     // console.log(token)
 
 
 
     const verifyMe = async (e) => {
         try {
+
             e.preventDefault()
             setVerifystatus('verifing')
-
+            
+            const searchParams = new URLSearchParams(window.location.search);
+            const token = searchParams.get("token");
 
             const response = await axios.post(`api/verifypassword/forgot?token=${token}`)
 

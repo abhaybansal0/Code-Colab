@@ -66,13 +66,24 @@ body {
   background-color: #09090b;
 }
 
+.bg-1e1e1e{
+  background-color: #1e1e1e;
+}
+
 .border-gray{
   border: 1px solid #27272a;
 }
 
 .text-8a8a93{
   color: #8a8a93;
+  transition: all 0.2s ease-in-out;
 }
+
+
+.text-8a8a93:hover{
+  color: #e3e3ec;
+}
+
 
 .inputField{
   padding: 0.5rem;
@@ -126,4 +137,31 @@ body {
 
 .topbar{
   transition: all 0.3s ease-in-out;
+}
+
+select{
+  appearance: none; /* Removes the default arrow */
+  -webkit-appearance: none; /* Removes the default arrow in WebKit browsers */
+  -moz-appearance: none; /* Removes the default arrow in Firefox */
+  background-color: #000; /* Background color */
+  color: #fff; /* Text color */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: black; /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 10px center; /* Position of the custom arrow */
+  background-size: 12px; /* Size of the arrow */
+}
+
+select:hover{
+  background: linear-gradient(135deg, #000000, #1c1c1c);
+}
+
+.save-btn{
+  transition: all 0.1s ease-in-out;
+}
+
+.save-btn:hover{
+  transform: scale(0.95);
 }

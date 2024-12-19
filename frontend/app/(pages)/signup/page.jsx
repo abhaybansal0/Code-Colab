@@ -71,7 +71,7 @@ const Page = () => {
         <div className='w-scree h-screen flex justify-center items-center'>
 
             <div className="signup flex items-center justify-center
-            px-16  p-4 border-gray rounded-2xl">
+            px-16  p-4 border-gray rounded-2xl bg-black">
 
                 <form onSubmit={signMeUp} className='flex flex-col gap-4'>
 

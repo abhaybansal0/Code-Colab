@@ -1,9 +1,9 @@
 'use client'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useState } from 'react'
 import axios from 'axios'
 import './utils.css'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 
 
@@ -13,18 +13,17 @@ const Page = () => {
 
     const [verifystatus, setVerifystatus] = useState('nill')
 
-    const searchParams = useSearchParams();
-    const token = searchParams.get("token");
-
-
 
 
     const verifyMe = async (e) => {
         try {
+
+            const searchParams = new URLSearchParams(window.location.search);
+            const token = searchParams.get("token");
+
             e.preventDefault()
             setVerifystatus('verifing')
-            console.log('till here')
-
+            // console.log('till here')
 
             const response = await axios.post(`/api/verifyemail/verifyme?token=${token}`)
 
@@ -53,7 +52,7 @@ const Page = () => {
         <div className='w-scree h-screen flex justify-center items-center'>
 
             <div className="signup flex flex-col items-center justify-center
-            px-16  p-4 border-gray rounded-2xl">
+            px-16  p-4 border-gray rounded-2xl bg-black">
 
                 <h1 className='text-2xl text-center '>Verification</h1>
 
@@ -74,5 +73,7 @@ const Page = () => {
         </div>
     )
 }
+
+
 
 export default Page

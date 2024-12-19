@@ -61,6 +61,10 @@ export default function RootLayout({ children }) {
             },
           }}
         />
+
+        <div className="absolute -z-10 w-screen h-screen">
+          <img src="../grid.svg" alt="grid" className="w-screen h-screen" />
+        </div>
         {children}
       </body>
     </html>

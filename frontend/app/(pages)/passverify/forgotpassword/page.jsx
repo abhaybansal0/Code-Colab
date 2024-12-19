@@ -2,7 +2,6 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
 import axios from 'axios'
 import toast from 'react-hot-toast'
 
@@ -75,7 +74,7 @@ const Page = () => {
         <div className='w-scree h-screen flex justify-center items-center'>
 
             <div className="signup flex items-center justify-center
-            px-16  p-4 border-gray rounded-2xl">
+            px-16  p-4 border-gray rounded-2xl bg-black">
 
                 <form onSubmit={forgotmypassword} className='flex flex-col gap-8'>
 

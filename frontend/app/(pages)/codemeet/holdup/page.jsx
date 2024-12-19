@@ -2,24 +2,20 @@
 import React from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useSearchParams } from 'next/navigation'
-import axios from 'axios'
 import toast from 'react-hot-toast'
 
 const Page = () => {
 
 
   const router = useRouter();
-  
-  const params = useSearchParams()
-  
+
+
 
   const [userinfo, setUserinfo] = useState({
     guestName: ""
   })
 
-  const link = params.get("link")
-  const [meetid, setMeetid] = useState(link)
+  // const [meetid, setMeetid] = useState(link)
 
   const [buttondisabled, setButtondisabled] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -33,7 +29,11 @@ const Page = () => {
 
 
   const joinTheMeet = async (e) => {
+
     try {
+      const params = new URLSearchParams(window.location.search)
+      const meetid = params.get("link")
+
       e.preventDefault()
       setLoading(true)
       setButtondisabled(true)
@@ -46,7 +46,7 @@ const Page = () => {
     } catch (error) {
 
 
-      console.log(error)
+      toast.error(error)
       setLoading(false)
       setButtondisabled(false)
     }
@@ -72,7 +72,8 @@ const Page = () => {
     <div className='w-scree h-screen flex justify-center items-center'>
 
       <div className="signup flex items-center justify-center
-            px-16  p-4 border-gray rounded-2xl">
+            px-16  p-4 border-gray rounded-2xl bg-black">
+
 
         <form onSubmit={joinTheMeet} className='flex flex-col gap-8'>
 
@@ -93,7 +94,7 @@ const Page = () => {
 
           <button className={`btn-white mt-6 rounded-xl ${loading ? 'animate-pulse' : ''}
                         flex items-center justify-center gap-4
-                    `}
+                        `}
             disabled={buttondisabled}
             type='submit'
           >{loading ? (
@@ -103,10 +104,12 @@ const Page = () => {
             </>
           ) : 'Join'}</button>
         </form>
+
       </div>
 
     </div>
   )
 }
+
 
 export default Page

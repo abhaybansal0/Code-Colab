@@ -11,7 +11,6 @@ import Terminal from './_comps/Terminal';
 import InputTerminal from './_comps/InputTerminal';
 import ExecuteCode from './_comps/runapi'
 import toast from 'react-hot-toast';
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/navigation';
 import Navbarmeet from './_comps/Navbarmeet';
 
@@ -24,11 +23,9 @@ const Page = () => {
 
 
   const router = useRouter()
-  const params = useSearchParams();
-  const currname = params.get("myname");
 
 
-  const myname = useRef(currname)
+  // const myname = useRef(currname)
 
 
   // States //
@@ -143,13 +140,17 @@ const Page = () => {
 
   }
 
-  const Livepreview = (e) => {
+  const bringCanvas = (e) => {
     e.preventDefault()
     if(currlanguage!=='HTML'){
 
       setCurrlanguage('HTML')
     }
-    else {
+  }
+  const bringEdittor = (e) => {
+    e.preventDefault()
+    if(currlanguage==='HTML'){
+
       setCurrlanguage('javascript')
     }
   }
@@ -163,6 +164,9 @@ const Page = () => {
 
   useEffect(() => {
     // Connect to the Socket.IO server
+    const params = new URLSearchParams(window.location.search);
+    const currname = params.get("myname");
+  
 
     const socketInstance = io(process.env.NEXT_PUBLIC_BACKEND_DOMAIN); // Backend URL
 
@@ -211,7 +215,7 @@ const Page = () => {
   // Components
   const Runbtn = () => {
     return (
-      <button className='btn-black rounded-lg  !px-4 flex items-center justify-center gap-2 !py-2 text-center'
+      <button className='btn-black rounded-lg  !px-4 flex items-center justify-center gap-2 !py-2 text-center' 
         onClick={() => RunCode(Code)}>
         <img src="../run.svg" alt="" className='w-6' />
         Run
@@ -262,7 +266,7 @@ const Page = () => {
                   ${disableSave ? 'animate-pulse' : ''}
                 `}>
 
-                  <img src="../save.svg" alt="save img" className='w-8 invert-1' />
+                  <img src="../save.svg" alt="save img" className='w-8 invert-1 save-btn' />
                 </button>
               </div>
 
@@ -287,7 +291,7 @@ const Page = () => {
           {currlanguage === 'HTML' ? (
             <Canvas value={'HTML'}>
               <iframe
-                className="w-full h-full border-0 rounded-xl"
+                className="w-full h-full border-gray rounded-xl"
                 srcDoc={Code}
                 sandbox="allow-scripts"
                 title="Live Preview"
@@ -308,7 +312,7 @@ const Page = () => {
       </div>
 
 
-      <Navbarmeet bringpreview={Livepreview} />
+      <Navbarmeet bringpreview={bringCanvas} bringEdittor={bringEdittor} />
     </CodemeetLayout>
 
   )

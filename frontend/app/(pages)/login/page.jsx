@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const Page = () => {
 
@@ -38,7 +39,8 @@ const Page = () => {
             setLoading(false)
             setButtondisabled(false)
         } catch (error) {
-            console.log('Error Singingup', error)
+            // console.log('Error Singingup', error)
+            toast.error("Please Check Your Credentials!")
             setLoading(false)
             setButtondisabled(false)
         }
@@ -62,7 +64,7 @@ const Page = () => {
         <div className='w-scree h-screen flex justify-center items-center'>
 
             <div className="signup flex flex-col items-center justify-center
-            px-16  p-4 border-gray rounded-2xl">
+            px-16  p-4 border-gray rounded-2xl bg-black">
 
                 <form onSubmit={LogmeIn} className='flex flex-col gap-4'>
 
@@ -102,7 +104,7 @@ const Page = () => {
                 </form>
 
                 <Link href="/passverify/forgotpassword">
-                    <h1 className='mt-4'>Forgot password</h1>
+                    <h1 className='mt-4 text-8a8a93 '>Forgot password</h1>
                 </Link>
             </div>
 

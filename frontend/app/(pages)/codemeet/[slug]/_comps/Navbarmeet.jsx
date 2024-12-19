@@ -3,7 +3,7 @@ import Link from 'next/link';
 import './page.css'
 
 
-const Navbarmeet = ({ bringpreview }) => {
+const Navbarmeet = ({ bringpreview, bringEdittor }) => {
 
 
     return (
@@ -24,7 +24,11 @@ const Navbarmeet = ({ bringpreview }) => {
 
                         <ul className='flex gap-4 h-full'>
 
-                            <Link href=''><li>Edittor</li></Link>
+                            <button onClick={bringEdittor}>
+
+                                <li>Edittor</li>
+                            </button>
+
                             <button onClick={bringpreview}>
                                 <li>Cavas</li>
                             </button>
