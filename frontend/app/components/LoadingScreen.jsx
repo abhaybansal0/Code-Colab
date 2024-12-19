@@ -1,7 +1,5 @@
 import React from 'react'
-import { mirage } from 'ldrs'
-
-mirage.register()
+import 'ldrs/mirage'
 
 
 const LoadingScreen = ({ showLoading }) => {

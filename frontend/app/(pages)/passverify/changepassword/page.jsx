@@ -50,7 +50,6 @@ const Page = () => {
                 router.push('/signup/gotoEmail')
             }, 3000);
 
-            setShowLoading(false)
             setLoading(false)
             setButtondisabled(false)
         } catch (error) {
