@@ -78,6 +78,7 @@ export default function Home() {
         }
         else setShow_Popup('Nill');
     }
+
     const Start_Hide_Show = () => {
         setShowProfile(false)
 
@@ -95,8 +96,8 @@ export default function Home() {
         try {
 
             setshowLoading(true)
-
-
+            
+            
             // The admin id will be taken by my token
             // Sending Meet Data to be saved
             const link = generateALink();
@@ -104,16 +105,17 @@ export default function Home() {
                 meetId: link,
                 codebase: ''
             }
-
+            
             const res2 = await axios.post('/api/meetings/addmeet', meetDetails)
             setCodeid(link);
             console.log(res2.data);
-
+            
             router.push(`/codemeet/holdup?link=${link}`)
 
-
-
+            
+            
         } catch (error) {
+            setshowLoading(false)
             if (!loggedIn) {
                 toast("Please Login First!")
 
@@ -164,9 +166,10 @@ export default function Home() {
             setshowLoading(false)
             setShow_Popup("Nill")
             setShowProfile(true)
-
-
+            
+            
         } catch (error) {
+            setshowLoading(false)
             console.log(error)
             toast.error("Please Login First!")
         }
@@ -177,7 +180,7 @@ export default function Home() {
     return (
 
         <>
-            <Join_Popup show_Popup={show_Popup} setShow_Popup={setShow_Popup} />
+            <Join_Popup show_Popup={show_Popup} setLoading={setshowLoading} />
             <Start_PopUp show_Popup={show_Popup} startAMeet={startAMeet} />
 
             <LoadingScreen showLoading={showLoading} />

@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import J_Btn from '../Btns/J_Btn'
 import './BlurrBg.css'
+import toast from 'react-hot-toast';
 
 
 
-const Join_PopUp = ({ show_Popup, setShow_Popup }) => {
+const Join_PopUp = ({ show_Popup, setLoading }) => {
 
   const router = useRouter();
 
@@ -22,20 +23,22 @@ const Join_PopUp = ({ show_Popup, setShow_Popup }) => {
   }
 
   const handleSubmit = (e) => {
+    setLoading(true)
     e.preventDefault();
 
     if (!inputvalue.includes('/codemeet/')) {
-      alert('Invalid Link');
+      toast.error('Invalid Link');
       return;
     }
 
     const link = inputvalue.split('/codemeet/')[1];
     router.push(`/codemeet/${link}/holdup`)
+    setLoading(false)
   }
-
 
   useEffect(() => {
     if (inputvalue.trim() === '') {
+
       setDisabeledBtn(true)
     } else {
       setDisabeledBtn(false)
