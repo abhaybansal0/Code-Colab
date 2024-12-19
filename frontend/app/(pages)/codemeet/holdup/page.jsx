@@ -3,6 +3,7 @@ import React from 'react'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import LoadingScreen from '@/app/components/LoadingScreen'
 
 const Page = () => {
 
@@ -19,6 +20,7 @@ const Page = () => {
 
   const [buttondisabled, setButtondisabled] = useState(true)
   const [loading, setLoading] = useState(false)
+  const [showLoading, setShowLoading] = useState(false)
 
   const OnChange = (e) => {
     e.preventDefault();
@@ -31,6 +33,7 @@ const Page = () => {
   const joinTheMeet = async (e) => {
 
     try {
+      setShowLoading(true)
       const params = new URLSearchParams(window.location.search)
       const meetid = params.get("link")
 
@@ -94,6 +97,8 @@ const Page = () => {
 
   return (
     <div className='w-scree h-screen flex justify-center items-center'>
+
+      <LoadingScreen showLoading={showLoading} />
 
       <div className="signup flex flex-col gap-10 items-center justify-center
             px-16  p-4 border-gray rounded-2xl bg-black ">

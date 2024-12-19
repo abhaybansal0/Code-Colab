@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import LoadingScreen from '@/app/components/LoadingScreen'
 
 const Page = () => {
 
@@ -69,6 +70,8 @@ const Page = () => {
 
     return (
         <div className='w-scree h-screen flex justify-center items-center'>
+
+            <LoadingScreen showLoading={loading} />
 
             <div className="signup flex items-center justify-center
             px-16  p-4 border-gray rounded-2xl bg-black">

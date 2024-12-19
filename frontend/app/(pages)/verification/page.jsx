@@ -4,6 +4,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import './utils.css'
 import { useRouter } from 'next/navigation'
+import LoadingScreen from '@/app/components/LoadingScreen'
 
 
 
@@ -12,11 +13,14 @@ const Page = () => {
     const router = useRouter();
 
     const [verifystatus, setVerifystatus] = useState('nill')
+    const [loading, setLoading] = useState(false)
 
 
 
     const verifyMe = async (e) => {
-        try {
+        try {   
+
+            setLoading(true)
 
             const searchParams = new URLSearchParams(window.location.search);
             const token = searchParams.get("token");
@@ -31,15 +35,17 @@ const Page = () => {
 
             setTimeout(() => {
                 setVerifystatus('verified')
-            }, 5000);
+                setLoading(false)
+            }, 2000);
 
             setTimeout(() => {
                 router.push('/login');
 
-            }, 6500);
+            }, 3000);
 
         } catch (error) {
             console.log('Error Singingup', error)
+            setLoading(false)
         }
     }
 
@@ -50,6 +56,8 @@ const Page = () => {
 
     return (
         <div className='w-scree h-screen flex justify-center items-center'>
+
+            <LoadingScreen showLoading={loading} />
 
             <div className="signup flex flex-col items-center justify-center
             px-16  p-4 border-gray rounded-2xl bg-black">

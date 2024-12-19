@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import Profile from './components/Profile';
+import LoadingScreen from './components/LoadingScreen';
 
 
 
@@ -23,8 +24,10 @@ export default function Home() {
     const [showProfile, setShowProfile] = useState(false)
     const [userInfo, setUserInfo] = useState('')
     const [loggedIn, setLoggedIn] = useState(false);
+    const [infoloaded, setInfoloaded] = useState(false)
     const [Error, setError] = useState(null)
     const [loaded, setLoaded] = useState(false)
+    const [showLoading, setshowLoading] = useState(false)
 
     // Meeting Id
     const [codeid, setCodeid] = useState();
@@ -91,6 +94,9 @@ export default function Home() {
         // () => router.push(`/codemeet/holdup/${codeid}`)
         try {
 
+            setshowLoading(true)
+
+
             // The admin id will be taken by my token
             // Sending Meet Data to be saved
             const link = generateALink();
@@ -132,10 +138,16 @@ export default function Home() {
     }
 
     const userProfile = async () => {
-        setShow_Popup("Nill")
-        setShowProfile(!showProfile)
+
+        if(showProfile === true){
+            setShowProfile(false)
+            return;
+        }
+
         try {
             
+            setshowLoading(true)
+
             const myinfo = await axios.post('/api/me')
             const mymeetings = await axios.post('/api/mymeetings')
 
@@ -147,7 +159,11 @@ export default function Home() {
                 admin: myinfo.data.data.isAdmin
             }
             setUserInfo(user_Info);
-            console.log(user_Info)
+            // console.log(user_Info)
+
+            setshowLoading(false)
+            setShow_Popup("Nill")
+            setShowProfile(true)
 
 
         } catch (error) {
@@ -163,6 +179,8 @@ export default function Home() {
         <>
             <Join_Popup show_Popup={show_Popup} setShow_Popup={setShow_Popup} />
             <Start_PopUp show_Popup={show_Popup} startAMeet={startAMeet} />
+
+            <LoadingScreen showLoading={showLoading} />
 
             <Profile show_Profile={showProfile} user_info={userInfo} />
 
