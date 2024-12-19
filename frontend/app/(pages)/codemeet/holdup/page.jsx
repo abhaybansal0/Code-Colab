@@ -15,7 +15,7 @@ const Page = () => {
     guestName: ""
   })
 
-  // const [meetid, setMeetid] = useState(link)
+  const [id, setId] = useState(null)
 
   const [buttondisabled, setButtondisabled] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -61,6 +61,30 @@ const Page = () => {
     }
   }, [userinfo])
 
+  useEffect(() => {
+
+    const params = new URLSearchParams(window.location.search)
+    const link = params.get("link")
+
+    setId(link);
+
+
+  }, [])
+
+
+  const handleCopy = async () => {
+    try {
+      // Copy the provided text to the clipboard
+      await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN}/codemeet/holdup?link=${id}`);
+
+      // Update the state to show success message or change button text
+      toast.success("Link Copied!")
+
+    } catch (err) {
+      // console.error('Failed to copy: ', err);
+      toast.error("Failed to Copy!")
+    }
+  }
 
 
 
@@ -71,13 +95,13 @@ const Page = () => {
   return (
     <div className='w-scree h-screen flex justify-center items-center'>
 
-      <div className="signup flex items-center justify-center
-            px-16  p-4 border-gray rounded-2xl bg-black">
+      <div className="signup flex flex-col gap-10 items-center justify-center
+            px-16  p-4 border-gray rounded-2xl bg-black ">
 
 
-        <form onSubmit={joinTheMeet} className='flex flex-col gap-8'>
+        <form onSubmit={joinTheMeet} className='flex flex-col gap-1'>
 
-          <h1 className='text-2xl text-center'> Code Colab</h1>
+          <h1 className='text-2xl text-center mb-8'> Code Colab</h1>
 
           <div className='flex flex-col gap-0.5'>
             <label htmlFor="username" className='text-8a8a93'>Your Name</label>
@@ -104,6 +128,23 @@ const Page = () => {
             </>
           ) : 'Join'}</button>
         </form>
+
+        <div>
+
+          <label htmlFor="meetinglink" className='text-8a8a93'>Invite others</label>
+          <div id='meetinglink' className='flex border-gray border rounded-lg text-nowrap'>
+            <button className='btn-black border-gray rounded-lg rounded-s-md'
+              onClick={handleCopy}
+            >
+              Copy
+            </button>
+
+            <div className='text-center px-4 py-3 text-8a8a93 max-w-44 overflow-x-hidden'>
+              {`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN}/codemeet/holdup?link=${id}`}
+            </div>
+
+          </div>
+        </div>
 
       </div>
 

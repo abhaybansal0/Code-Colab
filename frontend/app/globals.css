@@ -143,19 +143,15 @@ select{
   appearance: none; /* Removes the default arrow */
   -webkit-appearance: none; /* Removes the default arrow in WebKit browsers */
   -moz-appearance: none; /* Removes the default arrow in Firefox */
-  background-color: #000; /* Background color */
-  color: #fff; /* Text color */
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: black; /* Custom arrow */
-  background-repeat: no-repeat;
-  background-position: right 10px center; /* Position of the custom arrow */
-  background-size: 12px; /* Size of the arrow */
+
 }
 
 select:hover{
+  background-color: black;
   background: linear-gradient(135deg, #000000, #1c1c1c);
+}
+select:focus{
+  background-color: black;
 }
 
 .save-btn{
@@ -164,4 +160,12 @@ select:hover{
 
 .save-btn:hover{
   transform: scale(0.95);
+}
+
+
+.animateme{
+  transition: all 0.3s ease-in-out;
+}
+.animateme:disabled:hover{
+  transform: none;
 }

@@ -1,10 +1,25 @@
 import React from 'react';
 import Link from 'next/link';
 import './page.css'
+import toast from 'react-hot-toast';
 
 
-const Navbarmeet = ({ bringpreview, bringEdittor }) => {
+const Navbarmeet = ({ bringpreview, bringEdittor, meetid }) => {
 
+
+    const handleCopy = async () => {
+        try {
+            // Copy the provided text to the clipboard
+            await navigator.clipboard.writeText(`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN}/codemeet/holdup?link=${meetid}`);
+
+            // Update the state to show success message or change button text
+            toast.success("Link Copied!")
+
+        } catch (err) {
+            // console.error('Failed to copy: ', err);
+            toast.error("Failed to Copy!")
+        }
+    }
 
     return (
         <nav >
@@ -37,6 +52,11 @@ const Navbarmeet = ({ bringpreview, bringEdittor }) => {
                                     <img src="../chat.svg" alt="fh" />
                                 </li>
                             </Link>
+                            <button onClick={handleCopy}>
+                                <li>
+                                    <img src="../addpeople.svg" alt="h" className='invert' />
+                                </li>
+                            </button>
                         </ul>
 
                     </div>

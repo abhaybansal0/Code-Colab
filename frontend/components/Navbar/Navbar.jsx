@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import './nav.css'
 
-const Navbar = ({ Join_Hide_Show_Handler, Start_Hide_Show_Handler }) => {
+const Navbar = ({ Join_Hide_Show_Handler, Start_Hide_Show_Handler, userProfile }) => {
 
 
     return (
@@ -16,8 +16,16 @@ const Navbar = ({ Join_Hide_Show_Handler, Start_Hide_Show_Handler }) => {
                 <div className="navcontent h-full">
                     <ul className='flex gap-4 h-full'>
                         <Link href=""><li>Home</li></Link>
+
                         <Link href=""><li>About</li></Link>
-                        <Link href="/"><li>Edditor</li></Link>
+
+                        <Link href={`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN}/codemeet/universal?myname=Guest`}>
+                            <li>Edditor</li>
+                        </Link>
+
+                        <button onClick={userProfile}>
+                            <li>Profile</li>
+                        </button>
                     </ul>
                 </div>
                 <div className="buttons flex gap-2 p-1.5">

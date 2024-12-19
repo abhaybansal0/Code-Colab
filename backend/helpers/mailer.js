@@ -53,7 +53,7 @@ const sendMail = async ({ email, mailtype, userId }) => {
 
 
         const mailOptions = {
-            from: 'codecolab.app@gmail.com', // sender address
+            from: 'Code Colab', // sender address
             to: email,
             subject: "Email Verification", // Subject line
             text: "Please Verify", // plain text body
@@ -68,7 +68,7 @@ const sendMail = async ({ email, mailtype, userId }) => {
               <p style="margin: 20px 0;">
                 <a 
                   href="${process.env.DOMAIN}/${mailtype === 'VERIFY' ? 'verification' : 'passverify'}?token=${hashedToken}" 
-                  style="display: inline-block; padding: 10px 15px; color: #fff; background-color: #007bff; text-decoration: none; border-radius: 5px;">
+                  style="display: inline-block; padding: 10px 15px; color: #fff; background-color: #000000; text-decoration: none; border-radius: 5px;">
                   ${mailtype === 'VERIFY' ? 'Verify Your Email' : 'Reset Your Password'}
                 </a>
               </p>
@@ -89,7 +89,7 @@ const sendMail = async ({ email, mailtype, userId }) => {
 
 
 
-        console.log('Till here');
+        // console.log('Till here');
         return mailResponse;
 
 

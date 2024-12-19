@@ -8,7 +8,8 @@ import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
+import toast from 'react-hot-toast';
+import Profile from './components/Profile';
 
 
 
@@ -19,6 +20,8 @@ export default function Home() {
 
     const [message, setMessage] = useState('');
     const [show_Popup, setShow_Popup] = useState('Nill');
+    const [showProfile, setShowProfile] = useState(false)
+    const [userInfo, setUserInfo] = useState('')
     const [loggedIn, setLoggedIn] = useState(false);
     const [Error, setError] = useState(null)
     const [loaded, setLoaded] = useState(false)
@@ -64,7 +67,7 @@ export default function Home() {
 
 
     const Join_Hide_Show = () => {
-        // show_Popup === 'Nill' ? setShow_Popup('Joinpop') : setShow_Popup('Nill');
+        setShowProfile(false)
         if (show_Popup === 'Nill') setShow_Popup('Joinpop');
         else if (show_Popup == 'Startpop') {
             setShow_Popup('Nill');
@@ -73,7 +76,8 @@ export default function Home() {
         else setShow_Popup('Nill');
     }
     const Start_Hide_Show = () => {
-        // show_Popup === 'Nill' ? setShow_Popup('Startpop') : setShow_Popup('Nill');
+        setShowProfile(false)
+
         if (show_Popup === 'Nill') setShow_Popup('Startpop');
         else if (show_Popup == 'Joinpop') {
             setShow_Popup('Nill');
@@ -104,9 +108,14 @@ export default function Home() {
 
 
         } catch (error) {
+            if (!loggedIn) {
+                toast("Please Login First!")
+
+            }
             // console.log(error)
-            if (error.response.data.message === 'Token expired. Please login again.') {
-                console.log('Session Expired, Login Again')
+            else if (error.response.data.message === 'Token expired. Please login again.') {
+                // console.log('Session Expired, Login Again')
+                toast("Please Re-Login")
             }
         }
 
@@ -122,6 +131,30 @@ export default function Home() {
         }
     }
 
+    const userProfile = async () => {
+        setShow_Popup("Nill")
+        setShowProfile(!showProfile)
+        try {
+            
+            const myinfo = await axios.post('/api/me')
+            const mymeetings = await axios.post('/api/mymeetings')
+
+            console.log(myinfo.data.data.username, mymeetings.data.meetings)
+
+            const user_Info = {
+                username: myinfo.data.data.username,
+                meetings: mymeetings.data.meetings,
+                admin: myinfo.data.data.isAdmin
+            }
+            setUserInfo(user_Info);
+            console.log(user_Info)
+
+
+        } catch (error) {
+            console.log(error)
+            toast.error("Please Login First!")
+        }
+    }
 
 
 
@@ -131,7 +164,13 @@ export default function Home() {
             <Join_Popup show_Popup={show_Popup} setShow_Popup={setShow_Popup} />
             <Start_PopUp show_Popup={show_Popup} startAMeet={startAMeet} />
 
-            <Navbar Join_Hide_Show_Handler={Join_Hide_Show} Start_Hide_Show_Handler={Start_Hide_Show} />
+            <Profile show_Profile={showProfile} user_info={userInfo} />
+
+            <Navbar
+                Join_Hide_Show_Handler={Join_Hide_Show}
+                Start_Hide_Show_Handler={Start_Hide_Show}
+                userProfile={userProfile}
+            />
 
             {/* <img src="./eyes.jpg" alt="and img" className='w-screen h-screen absolute -z-10 object-cover' /> */}
 
@@ -155,12 +194,12 @@ export default function Home() {
 
                     ) : (
 
-                            <button onClick={logmeout}
-                                className={`btn-black !px-4 border rounded-3xl border-gray
+                        <button onClick={logmeout}
+                            className={`btn-black !px-4 border rounded-3xl border-gray
                              ${!loaded ? '-scale-50' : ''}
                              `}>
-                                Logout
-                            </button>
+                            Logout
+                        </button>
                     )
                     }
 

@@ -18,6 +18,7 @@ import changepassword from './users/changepassword/route.js';
 import updatecode from './meetings/updatecode/route.js';
 import addmeet from './meetings/addmeet/route.js';
 import fetchmeet from './meetings/fetchmeeet/reoute.js';
+import mymeetings from './meetings/mymeetings/route.js';
 
 
 
@@ -65,7 +66,7 @@ app.use('/api/changepassword', changepassword)
 app.use('/api/meetings/addmeet', addmeet)
 app.use('/api/meetings/updatemeet', updatecode)
 app.use('/api/meetings/fetchmeet', fetchmeet)
-
+app.use('/api/mymeetings', mymeetings)
 
 
 

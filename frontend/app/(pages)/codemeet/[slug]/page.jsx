@@ -142,14 +142,85 @@ const Page = () => {
 
   const bringCanvas = (e) => {
     e.preventDefault()
-    if(currlanguage!=='HTML'){
+    if (currlanguage !== 'HTML') {
 
       setCurrlanguage('HTML')
+      if(Code === "" || Code === `console.log("Hello World!");`){
+        setCode(`<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Preview Default Template</title>
+    <style>
+        :root {
+            --bg-color: #0f0f0f;
+            --text-color: #d4d4d8;
+            --accent-color: #7c3aed;
+            --muted-color: #71717a;
+            --card-bg: #1a1a1a;
+            --card-border: #2c2c2e;
+            --rounded-md: 0.375rem;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--rounded-md);
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .card h1 {
+            font-size: 1.5rem;
+            color: var(--accent-color);
+            margin-bottom: 1rem;
+        }
+
+        .card p {
+            font-size: 0.875rem;
+            color: var(--muted-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .card code {
+            background-color: rgba(124, 58, 237, 0.1);
+            color: var(--accent-color);
+            padding: 0.25rem 0.5rem;
+            border-radius: var(--rounded-md);
+            font-family: 'Source Code Pro', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>Welcome to Code Colab</h1>
+        <p>Start editing to see live changes in your project.</p>
+        <p>Example code: <code>&lt;h2&gt;Hello, World!&lt;/h2&gt;</code></p>
+    </div>
+</body>
+</html>
+`)
+      }
     }
   }
   const bringEdittor = (e) => {
     e.preventDefault()
-    if(currlanguage==='HTML'){
+    if (currlanguage === 'HTML') {
 
       setCurrlanguage('javascript')
     }
@@ -166,7 +237,7 @@ const Page = () => {
     // Connect to the Socket.IO server
     const params = new URLSearchParams(window.location.search);
     const currname = params.get("myname");
-  
+
 
     const socketInstance = io(process.env.NEXT_PUBLIC_BACKEND_DOMAIN); // Backend URL
 
@@ -187,11 +258,14 @@ const Page = () => {
       // console.log(IncomingCode.input);
     })
 
-    socketInstance.emit('Ijoined', {slug: slug, name: currname})
+    socketInstance.emit('Ijoined', { slug: slug, name: currname })
 
 
     socketInstance.on('someoneJoined', (name) => {
-      toast(`${name.myname} has Joined!`)
+      if (name.myname) {
+
+        toast(`${name.myname} has Joined!`)
+      }
     })
 
 
@@ -207,7 +281,7 @@ const Page = () => {
 
 
 
-  
+
 
 
 
@@ -215,7 +289,7 @@ const Page = () => {
   // Components
   const Runbtn = () => {
     return (
-      <button className='btn-black rounded-lg  !px-4 flex items-center justify-center gap-2 !py-2 text-center' 
+      <button className='btn-black rounded-lg  !px-4 flex items-center justify-center gap-2 !py-2 text-center'
         onClick={() => RunCode(Code)}>
         <img src="../run.svg" alt="" className='w-6' />
         Run
@@ -312,7 +386,7 @@ const Page = () => {
       </div>
 
 
-      <Navbarmeet bringpreview={bringCanvas} bringEdittor={bringEdittor} />
+      <Navbarmeet bringpreview={bringCanvas} bringEdittor={bringEdittor} meetid={meetid} />
     </CodemeetLayout>
 
   )
