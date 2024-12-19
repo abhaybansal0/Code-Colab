@@ -51,7 +51,7 @@ const Page = ({ show_Profile, user_info }) => {
 
               {(user_info.meetings)?.map((meet, index) => {
                 return (
-                  <Link key={index} href={`${process.env.NEXT_PUBLIC_FRONTEND_DOMAIN}/codemeet/${meet.meetId}?myname=${user_info.username}`}>
+                  <Link key={index} href={`/codemeet/${meet.meetId}?myname=${user_info.username}`}>
                     {meeting(meet.meetId)}
                   </Link>
                 )
