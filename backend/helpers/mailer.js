@@ -51,9 +51,8 @@ const sendMail = async ({ email, mailtype, userId }) => {
         });
 
 
-
         const mailOptions = {
-            from: 'Code Colab', // sender address
+            from: process.env.GOOGLE_EMAIL, // sender address
             to: email,
             subject: "Email Verification", // Subject line
             text: "Please Verify", // plain text body

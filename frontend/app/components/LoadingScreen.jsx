@@ -19,7 +19,7 @@ const LoadingScreen = ({ showLoading }) => {
         ${showLoading ? ' opacity-1 backdrop-blur-md visible' : ' opacity-0 backdrop-blur-0 invisible'}`}>
 
             <l-mirage
-                size="60"
+                size="80"
                 speed="2.5"
                 color="white"
             ></l-mirage>

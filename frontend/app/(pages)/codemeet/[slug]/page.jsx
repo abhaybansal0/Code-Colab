@@ -145,7 +145,7 @@ const Page = () => {
     if (currlanguage !== 'HTML') {
 
       setCurrlanguage('HTML')
-      if(Code === "" || Code === `console.log("Hello World!");`){
+      if (Code === "" || Code === `console.log("Hello World!");`) {
         setCode(`<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -323,6 +323,7 @@ const Page = () => {
             <div className='flex justify-between items-center px-4'>
 
               <div className='flex items-center justify-center gap-8'>
+
                 <select name="language" id="langauge" onChange={onLanguageChange}
                   className='text-8a8a93 bg-black p-2 px-4 border-gray rounded-lg' >
                   <option value="javascript" >Javascript</option>
@@ -340,7 +341,14 @@ const Page = () => {
                   ${disableSave ? 'animate-pulse' : ''}
                 `}>
 
-                  <img src="../save.svg" alt="save img" className='w-8 invert-1 save-btn' />
+                  {/* <img src="../save.gif" alt="save img" className='w-8  save-btn invert' /> */}
+                  <lord-icon
+                    src="https://cdn.lordicon.com/ifyskbjd.json"
+                    trigger="click"
+                    stroke="bold"
+                    colors="primary:#4f1091,secondary:#2516c7"
+                    >
+                  </lord-icon>
                 </button>
               </div>
 

@@ -66,7 +66,10 @@ export default function RootLayout({ children }) {
           <img src="../grid.svg" alt="grid" className="w-screen h-screen" />
         </div>
         {children}
+
+        <script src="https://cdn.lordicon.com/lordicon.js"></script>
       </body>
+
     </html>
   );
 }

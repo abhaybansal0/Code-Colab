@@ -6,6 +6,8 @@ import { cpp } from "@codemirror/lang-cpp";
 import { keymap } from "@codemirror/view";
 import { completionKeymap } from "@codemirror/autocomplete";
 import { EditorView, Decoration } from '@codemirror/view';
+// import { EditorSelection, EditorState } from '@codemirror/state';
+
 
 // Custom theme with transparent background and modern styles
 const customTheme = EditorView.theme({
