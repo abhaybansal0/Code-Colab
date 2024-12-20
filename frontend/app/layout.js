@@ -67,7 +67,7 @@ export default function RootLayout({ children }) {
         </div>
         {children}
 
-        <script src="https://cdn.lordicon.com/lordicon.js"></script>
+        {/* <script src="https://cdn.lordicon.com/lordicon.js"></script> */}
       </body>
 
     </html>
