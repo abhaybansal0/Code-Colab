@@ -14,6 +14,8 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import Navbarmeet from './_comps/Navbarmeet';
 
+import Script from 'next/script';
+
 
 
 const CodeEditor = dynamic(() => import('./_comps/CodeEdittor'), { ssr: false });
@@ -312,6 +314,10 @@ const Page = () => {
   return (
 
     <CodemeetLayout>
+
+      <Script src="https://cdn.lordicon.com/lordicon.js" />
+
+
       <div className='min-w-screen min-h-screen h-screen flex p-2 gap-3 overflow-y-hidden
       '>
 
@@ -338,7 +344,7 @@ const Page = () => {
 
 
                 <button onClick={SaveCode} disabled={disableSave} className={`
-                  ${disableSave ? 'animate-pulse' : ''}
+                  ${disableSave ? 'animate-pulse cursor-not-allowed' : ''}
                 `}>
 
                   {/* <img src="../save.gif" alt="save img" className='w-8  save-btn invert' /> */}
