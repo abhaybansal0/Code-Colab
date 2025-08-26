@@ -21,13 +21,11 @@ const RoleRequestModal = ({
     try {
       if (action === 'approve') {
         await onApprove(username);
-        toast.success(`Approved editor role for ${username}`);
       } else {
         await onDeny(username);
-        toast.success(`Denied editor role for ${username}`);
       }
     } catch (error) {
-      toast.error(`Failed to ${action} role for ${username}`);
+      console.log('Failed to ', action, ' role for ', username);
     } finally {
       setProcessing(prev => ({ ...prev, [username]: false }));
     }

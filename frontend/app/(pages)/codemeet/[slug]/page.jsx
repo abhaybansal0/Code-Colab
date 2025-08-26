@@ -26,14 +26,17 @@ const CodeEditor = dynamic(() => import('./_comps/CodeEdittor'), { ssr: false })
 const Page = () => {
 
 
-  const router = useRouter()
+  // const router = useRouter()
 
 
   // const myname = useRef(currname)
 
+  
+  const slug = window.location.pathname.split('/')[2];
+  const [meetid, setMeetid] = useState(slug)
 
   // States //
-  const [meetid, setMeetid] = useState('');
+  // const [meetid, setMeetid] = useState('');
   const [Output, setOutput] = useState('');
   const [inputtext, setInputtext] = useState('');
   const [Code, setCode] = useState('console.log("Hello World!");');
@@ -54,6 +57,7 @@ const Page = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [roleRequests, setRoleRequests] = useState([]);
   const [isRoleRequestModalOpen, setIsRoleRequestModalOpen] = useState(false);
+  const [showRoleRequestCard, setShowRoleRequestCard] = useState(false);
 
 
 
@@ -152,8 +156,7 @@ const Page = () => {
       const response = await axios.post('/api/meetings/updatemeet', userdetail);
 
       console.log(response.data)
-      toast.success('Code Saved Successfully! ')
-      const reres = await axios.post('/api/meetings/updatemeet', userdetail)
+      toast.success('Code Saved Successfully! ');
 
       setTimeout(() => {
         setDisableSave(false)
@@ -365,12 +368,9 @@ const Page = () => {
 
     // Listen for messages
     socketInstance.on('IncomingCode', (IncomingCode) => {
-      // console.log('A codeupdate is being detected');
       setCode(IncomingCode.code);
       setInputtext(IncomingCode.input);
       setOutput(IncomingCode.output);
-      // toast('Bello')
-      // console.log(IncomingCode.input);
     })
 
     socketInstance.emit('Ijoined', { slug: slug, name: currname })
@@ -378,7 +378,14 @@ const Page = () => {
 
     socketInstance.on('someoneJoined', (name) => {
       if (name.myname) {
-
+        const Outgoingdetails = {
+          slug: meetid,
+          code: Code,
+          input: inputtext,
+          output: Output
+        }
+        console.log('Outgoingdetails', Outgoingdetails)
+        socketInstance.emit('coding', Outgoingdetails)
         toast(`${name.myname} has Joined!`)
       }
     })
@@ -387,7 +394,6 @@ const Page = () => {
     socketInstance.on('newMessageNotification', (data) => {
       if (!isChatOpen && data.user !== currentUser && currentUser) {
         setHasUnreadMessages(true);
-        toast(`New message from ${data.user}`);
       }
     });
 
@@ -410,10 +416,10 @@ const Page = () => {
           return prev;
         });
         
-        // Only show toast if it's a new request
+        // Only show toast and card if it's a new request
         const existingRequest = roleRequests.find(req => req.requester === data.requester);
         if (!existingRequest) {
-          toast(`${data.requester} is requesting editor role!`);
+          setShowRoleRequestCard(true);
         }
       }
     });
@@ -507,10 +513,10 @@ const Page = () => {
 
             <div className='flex justify-between items-center px-4'>
               {/* Role Management Section */}
-              <div className='flex items-center gap-4'>
+              <div className='flex flex-col md:flex-row items-center gap-2'>
                 <div className='flex items-center gap-2'>
                   <span className='text-sm text-gray-400'>Role:</span>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                  <span className={`px-4 py-1 rounded-full text-xs font-medium ${
                     userRole === 'editor' ? 'bg-blue-600 text-white' : 
                     userRole === 'owner' ? 'bg-yellow-600 text-white' : 
                     userRole === 'viewer' ? 'bg-gray-600 text-white' : 
@@ -537,19 +543,7 @@ const Page = () => {
                   </button>
                 )}
                 
-                {isOwner && roleRequests && roleRequests.length > 0 && (
-                  <div className='flex items-center gap-2'>
-                    <span className='px-2 py-1 rounded-full text-xs font-medium bg-orange-600 text-white animate-pulse'>
-                      📝 {roleRequests.length} request{roleRequests.length > 1 ? 's' : ''}
-                    </span>
-                    <button
-                      onClick={() => setIsRoleRequestModalOpen(true)}
-                      className='px-3 py-1 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors'
-                    >
-                      Manage Requests
-                    </button>
-                  </div>
-                )}
+
               </div>
 
               <div className='flex items-center justify-center gap-8'>
@@ -667,7 +661,10 @@ const Page = () => {
 
       <ChatModal
         isOpen={isChatOpen}
-        onClose={() => setIsChatOpen(false)}
+        onClose={() => {
+          setIsChatOpen(false);
+          setHasUnreadMessages(false);
+        }}
         socket={socket}
         meetid={meetid}
         currentUser={currentUser}
@@ -684,6 +681,101 @@ const Page = () => {
         onDeny={handleDenyRole}
         currentUser={currentUser}
       />
+
+      {/* Role Request Notification Badge */}
+      {isOwner && roleRequests && roleRequests.length > 0 && (
+        <div className="fixed top-4 right-4 z-50">
+          <button
+            onClick={() => setShowRoleRequestCard(true)}
+            className="bg-black border border-gray-700 rounded-lg shadow-2xl p-3 hover:bg-gray-900 transition-all duration-200 group"
+          >
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
+                  {roleRequests.length}
+                </span>
+              </div>
+              <span className="text-sm font-medium text-white">Role Requests</span>
+              <svg className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </button>
+        </div>
+      )}
+
+      {/* Floating Role Request Card */}
+      {isOwner && roleRequests && roleRequests.length > 0 && showRoleRequestCard && (
+        <div className="fixed top-4 right-4 z-50">
+          <div className="bg-black border border-gray-700 rounded-lg shadow-2xl p-4 w-80">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse"></div>
+                <h3 className="text-sm font-medium text-white">Role Requests</h3>
+              </div>
+              <button
+                onClick={() => setShowRoleRequestCard(false)}
+                className="text-gray-400 hover:text-white transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {/* Request Count */}
+            <div className="mb-3">
+              <span className="text-xs text-gray-300 bg-gray-800 px-2 py-1 rounded-full">
+                {roleRequests.length} pending request{roleRequests.length > 1 ? 's' : ''}
+              </span>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="space-y-2 mb-3">
+              {roleRequests.slice(0, 2).map((request, index) => (
+                <div key={index} className="bg-gray-800 rounded-lg p-3 border border-gray-700">
+                  <p className="text-xs text-gray-300 mb-2">
+                    {request.requester} wants editor role
+                  </p>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => {
+                        handleApproveRole(request.requester);
+                        setShowRoleRequestCard(false);
+                      }}
+                      className="px-3 py-1.5 bg-blue-600 text-white text-xs rounded-lg hover:bg-blue-700 transition-colors font-medium flex-1"
+                    >
+                      Approve
+                    </button>
+                    <button
+                      onClick={() => {
+                        handleDenyRole(request.requester);
+                        setShowRoleRequestCard(false);
+                      }}
+                      className="px-3 py-1.5 bg-gray-600 text-white text-xs rounded-lg hover:bg-gray-700 transition-colors font-medium flex-1"
+                    >
+                      Deny
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Manage All Button */}
+            <button
+              onClick={() => {
+                setIsRoleRequestModalOpen(true);
+                setShowRoleRequestCard(false);
+              }}
+              className="w-full bg-gray-800 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors font-medium text-sm border border-gray-700"
+            >
+              Manage All Requests
+            </button>
+          </div>
+        </div>
+      )}
 
     </>
 

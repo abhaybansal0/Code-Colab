@@ -61,7 +61,7 @@ const Navbarmeet = ({ bringpreview, bringEdittor, meetid, toggleChat, hasUnreadM
                                     )}
                                 </li>
                             </button>
-                            <button onClick={handleCopy} disabled={userRole !== 'owner'} className={userRole !== 'owner' ? 'opacity-50 cursor-not-allowed' : ''}>
+                            <button onClick={handleCopy} >
                                 <li>
                                     <img src="../addpeople.svg" alt="h" className='invert' />
                                 </li>
