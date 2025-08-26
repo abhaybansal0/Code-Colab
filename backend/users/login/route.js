@@ -48,7 +48,7 @@ router.post('/', async (req, res) => {
         
         
         const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, 
-            { expiresIn: '1d' }
+            { expiresIn: '10d' }
         )
         // console.log(tokenData, token); // token is the encrypted for of it, key value pair 
         

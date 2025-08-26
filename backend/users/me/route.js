@@ -33,14 +33,14 @@ router.post('/', async (req, res) => {
            res.status(400).send({error: "User Not found or Not loged In"})
         }
     
-        console.log(userId);
+        console.log('User loged in->', userId);
         
-         const user = await User.findOne({_id: userId}).select("-password")
+        const user = await User.findOne({_id: userId}).select("-password")
      
-         // Check if theres no user
+        // Check if theres no user
      
      
-         return res.status(200).send({ message: "User found", data: user})
+        return res.status(200).send({ message: "User found", data: user})
 
     } catch (error) {
         if (error.name === 'TokenExpiredError') {

@@ -13,7 +13,7 @@ const Terminal = ({ Output }) => {
   return (
     <div className='terminal border-0 rounded-2xl  h-1/2 text-white '>
 
-      <span className="inputtext  text-8a8a93  rounded-2xl rounded-es-none rounded-ee-none p-2 px-4 bg-0D0D0D">
+      <span className="inputtext  text-hover  rounded-2xl rounded-es-none rounded-ee-none p-2 px-4 bg-0D0D0D">
         Output.txt
       </span>
 

@@ -35,8 +35,9 @@ const Page = () => {
             e.preventDefault()
             setLoading(true)
             setButtondisabled(true)
-
+            
             if(userinfo.confirmpassword !== userinfo.password){
+                setLoading(false)
                 return toast.error("The Passwords Dont Match")
             }
 
@@ -45,17 +46,18 @@ const Page = () => {
                 password: userinfo.password
             }
             const response = await axios.post("/api/changepassword", sendDetails)
+            toast.success('Success!')
             setTimeout(() => {
                 
-                router.push('/signup/gotoEmail')
-            }, 3000);
+                router.push('/login')
+            }, 1000);
 
             setLoading(false)
             setButtondisabled(false)
         } catch (error) {
 
 
-            toast.error("Invalid Credentials!")
+            toast.error("Server Error!")
             setLoading(false)
             setButtondisabled(false)
         }

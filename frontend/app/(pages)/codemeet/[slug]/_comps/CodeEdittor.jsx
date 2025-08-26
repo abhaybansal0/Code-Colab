@@ -79,7 +79,7 @@ const customTheme = EditorView.theme({
 
 
 // CodeMirror setup with language support and custom theme
-const CodeEditor = ({ Code, onChange, language }) => {
+const CodeEditor = ({ Code, onChange, language, isEditable }) => {
   let languageExtension;
 
   // Dynamically choose language extension
@@ -99,6 +99,7 @@ const CodeEditor = ({ Code, onChange, language }) => {
         languageExtension,                      // Enable the selected language support
         customTheme,                            // Apply custom theme
         keymap.of(completionKeymap),         // Autocomplete support
+        EditorView.editable.of(isEditable),
       ]}
       onChange={onChange} // Handle changes in code
       className='border-gray rounded-xl max-h-full !terminal'

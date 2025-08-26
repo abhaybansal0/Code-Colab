@@ -12,7 +12,18 @@ const meetSchema = new mongoose.Schema({
     },
     codebase: {
         type: String
-    }
+    },
+    editors: [{
+        userId: String,
+        username: String,
+        assignedBy: String,
+        assignedAt: { type: Date, default: Date.now }
+    }],
+    messages: [{
+        content: String,
+        user: String,
+        timestamp: { type: Date, default: Date.now }
+    }]
 }) 
 
 

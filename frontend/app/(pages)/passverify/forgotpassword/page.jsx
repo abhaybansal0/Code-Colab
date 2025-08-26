@@ -82,7 +82,7 @@ const Page = () => {
                     <h1 className='text-2xl text-center'>Forgot Password</h1>
 
                     <div className='flex flex-col gap-0.5'>
-                        <label htmlFor="username">New Password</label>
+                        <label htmlFor="username">Email Address</label>
                         <input type="text" id='username' className='inputField'
                             placeholder='Username or Email Id'
                             name='userEmail'

@@ -1,7 +1,6 @@
 import dbconnect from '../../dbConfig/dbConfig.js'
 import { Router } from 'express'
 import Meeting from '../../models/meet.js'
-import jwt from 'jsonwebtoken'
 
 
 const router = Router();
@@ -12,20 +11,15 @@ router.post('/', async (req, res) => {
 
     try {
 
-        const token = req.cookies.token;
-        const { meetId, codebase } = req.body;
+        const { meetId, codebase, username } = req.body;
 
-        if(!token){
-            return res.status(400).send({message: 'Only Admin Can Save The codebase'})
+        if(!username){
+            return res.status(400).send({message: 'Username is required'})
         }
 
-        const decodedToken =  jwt.verify(token, process.env.TOKEN_SECRET)
-
-        const adminId = decodedToken.id;
 
 
-
-        const updatedMeetDetails = await Meeting.findOneAndUpdate({ meetId: meetId, adminId: adminId },
+        const updatedMeetDetails = await Meeting.findOneAndUpdate({ meetId: meetId, adminId: username },
             {
                 codebase: codebase
             })

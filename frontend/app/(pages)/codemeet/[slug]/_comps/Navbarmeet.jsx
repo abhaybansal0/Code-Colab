@@ -4,7 +4,7 @@ import './page.css'
 import toast from 'react-hot-toast';
 
 
-const Navbarmeet = ({ bringpreview, bringEdittor, meetid }) => {
+const Navbarmeet = ({ bringpreview, bringEdittor, meetid, toggleChat, hasUnreadMessages, userRole, isOwner, roleRequests }) => {
 
 
     const handleCopy = async () => {
@@ -39,20 +39,29 @@ const Navbarmeet = ({ bringpreview, bringEdittor, meetid }) => {
 
                         <ul className='flex gap-4 h-full'>
 
-                            <button onClick={bringEdittor}>
-
+                            <button 
+                                onClick={bringEdittor}
+                            >
                                 <li>Edittor</li>
                             </button>
 
-                            <button onClick={bringpreview}>
+                            <button 
+                                onClick={bringpreview}
+                            >
                                 <li>Cavas</li>
                             </button>
-                            <Link href="">
-                                <li>
+                            <button onClick={toggleChat} className="relative group">
+                                <li className={`transition-all duration-200 group-hover:scale-105 `}>
                                     <img src="../chat.svg" alt="fh" />
+                                    {hasUnreadMessages && (
+                                    <span className="relative flex size-3 -top-3 right-0">
+                                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-sky-400 opacity-75"></span>
+                                        <span className="relative inline-flex size-3 rounded-full bg-sky-500"></span>
+                                    </span>
+                                    )}
                                 </li>
-                            </Link>
-                            <button onClick={handleCopy}>
+                            </button>
+                            <button onClick={handleCopy} disabled={userRole !== 'owner'} className={userRole !== 'owner' ? 'opacity-50 cursor-not-allowed' : ''}>
                                 <li>
                                     <img src="../addpeople.svg" alt="h" className='invert' />
                                 </li>

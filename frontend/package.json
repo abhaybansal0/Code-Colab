@@ -21,6 +21,7 @@
     "codemirror": "^6.0.1",
     "dotenv": "^16.4.7",
     "ldrs": "^1.0.2",
+    "lucide-react": "^0.541.0",
     "next": "15.0.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

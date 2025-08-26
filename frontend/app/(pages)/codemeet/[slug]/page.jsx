@@ -5,7 +5,6 @@ import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'next/navigation';
 import axios from 'axios';
 import dynamic from 'next/dynamic';
-import CodemeetLayout from '../layout';
 import Canvas from './_comps/Canvas';
 import Terminal from './_comps/Terminal';
 import InputTerminal from './_comps/InputTerminal';
@@ -13,8 +12,11 @@ import ExecuteCode from './_comps/runapi'
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import Navbarmeet from './_comps/Navbarmeet';
+import ChatModal from './_comps/ChatModal';
+import RoleRequestModal from './_comps/RoleRequestModal';
 
 import Script from 'next/script';
+import { Save } from 'lucide-react';
 
 
 
@@ -42,16 +44,32 @@ const Page = () => {
   // socket states
   const [socket, setSocket] = useState(null);
 
+  // chat states
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState('');
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+  
+  // role states
+  const [userRole, setUserRole] = useState('viewer');
+  const [isOwner, setIsOwner] = useState(false);
+  const [roleRequests, setRoleRequests] = useState([]);
+  const [isRoleRequestModalOpen, setIsRoleRequestModalOpen] = useState(false);
+
 
 
 
   // Functions
 
   const onCodeChange = (value) => {
+    // Only editors can change code
+    if (userRole !== 'editor' && userRole !== 'owner' && userRole !== 'viewer') {
+      toast.error('Only editors can modify code!');
+      return;
+    }
+    
     // console.log(value);
     // value.preventDefault();
     setCode(value);
-    console.log('I am editting the code', meetid)
     const Outgoingdetails = {
       slug: meetid,
       code: value,
@@ -59,21 +77,35 @@ const Page = () => {
       output: Output
     }
     socket.emit('coding', Outgoingdetails)
-
   }
 
   const onLanguageChange = (e) => {
     e.preventDefault()
+    // Only editors can change language
+    if (userRole !== 'editor' && userRole !== 'owner') {
+      toast.error('Only editors can change language!');
+      return;
+    }
     setCurrlanguage(e.target.value);
   }
 
   const onInputchange = (e) => {
     e.preventDefault()
+    // Only editors can change input
+    if (userRole !== 'editor' && userRole !== 'owner') {
+      toast.error('Only editors can modify input!');
+      return;
+    }
     const input = e.target.value;
     setInputtext(input);
   }
 
   const RunCode = async (code) => {
+    // Only editors can run code
+    if (userRole !== 'editor' && userRole !== 'owner') {
+      toast.error('Only editors can run code!');
+      return;
+    }
 
     // console.log(code);
     const input = inputtext;
@@ -82,7 +114,7 @@ const Page = () => {
 
     try {
       const { run: result } = await ExecuteCode(code, language, input);
-      console.log(meetid);
+      // console.log(meetid);
       setOutput(result.output);
 
       const Runningdetails = {
@@ -102,6 +134,11 @@ const Page = () => {
   }
 
   const SaveCode = async () => {
+    // Only editors can save code
+    if (userRole !== 'editor' && userRole !== 'owner') {
+      toast.error('Only editors can save code!');
+      return;
+    }
 
     try {
 
@@ -109,13 +146,14 @@ const Page = () => {
 
       const userdetail = {
         "meetId": meetid,
-        "codebase": Code
+        "codebase": Code,
+        "username": currentUser
       }
       const response = await axios.post('/api/meetings/updatemeet', userdetail);
 
       console.log(response.data)
       toast.success('Code Saved Successfully! ')
-      const reres = await axios.post('/api/meetings/updatemeet', userdetail);
+      const reres = await axios.post('/api/meetings/updatemeet', userdetail)
 
       setTimeout(() => {
         setDisableSave(false)
@@ -123,7 +161,8 @@ const Page = () => {
 
 
     } catch (error) {
-      console.log(error.message)
+      setDisableSave(false)
+      // console.log(error.message)
       toast.error('Only Admin Can Save The Codebase! ')
     }
   }
@@ -144,6 +183,12 @@ const Page = () => {
 
   const bringCanvas = (e) => {
     e.preventDefault()
+    // Only editors can switch to canvas
+    if (userRole !== 'editor' && userRole !== 'owner' && userRole !== 'viewer') {
+      toast.error('Only editors can switch to canvas!');
+      return;
+    }
+    
     if (currlanguage !== 'HTML') {
 
       setCurrlanguage('HTML')
@@ -220,13 +265,58 @@ const Page = () => {
       }
     }
   }
+
+
   const bringEdittor = (e) => {
     e.preventDefault()
+    // Only editors can switch to editor
+    if (userRole !== 'editor' && userRole !== 'owner' && userRole !== 'viewer') {
+      toast.error('Only editors can switch to editor!');
+      return;
+    }
+    
     if (currlanguage === 'HTML') {
 
       setCurrlanguage('javascript')
     }
   }
+
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+    if (!isChatOpen) {
+      setHasUnreadMessages(false); // Clear unread messages when opening chat
+    }
+  };
+
+  const requestEditorRole = () => {
+    if (userRole === 'viewer' && !isOwner) {
+      if (socket) {
+        socket.emit('requestEditorRole', { slug: meetid, requesterId: currentUser });
+      }
+      
+      toast.success('Editor role requested!');
+    }
+  };
+
+  const assignRole = (targetUserId, newRole) => {
+    if (isOwner) {
+      // Notify other users via socket
+      socket.emit('assignRole', { slug: meetid, targetUserId, newRole });
+      
+      // Remove the request from the list
+      setRoleRequests(prev => prev.filter(req => req.requester !== targetUserId));
+      
+      toast.success(`Role ${newRole === 'editor' ? 'approved' : 'denied'} successfully!`);
+    }
+  };
+
+  const handleApproveRole = (username) => {
+    assignRole(username, 'editor');
+  };
+
+  const handleDenyRole = (username) => {
+    assignRole(username, 'viewer');
+  };
 
 
 
@@ -239,14 +329,37 @@ const Page = () => {
     // Connect to the Socket.IO server
     const params = new URLSearchParams(window.location.search);
     const currname = params.get("myname");
-
-
+    setCurrentUser(currname || 'Anonymous');
+    console.log('currentUser: ', currname)
     const socketInstance = io(process.env.NEXT_PUBLIC_BACKEND_DOMAIN); // Backend URL
 
     const slug = window.location.pathname.split('/')[2]
     setMeetid(slug)
+    let ownerForThisFunction = false
 
-    socketInstance.emit('JoinRoom', { slug: slug, myname: currname });
+    // Get user role from database first
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.post('/api/meetings/getmeetdetails', { 
+          meetId: slug,
+          username: currname 
+        });
+        console.log('response.data', response.data)
+        const { userRole: role, isOwner: owner } = response.data;
+        setUserRole(role);
+        setIsOwner(owner);
+        ownerForThisFunction = owner
+      } catch (error) {
+        console.log('Error fetching user role:', error);
+        // Default to viewer if API fails
+        setUserRole('viewer');
+        setIsOwner(false);
+      }
+    };
+
+    fetchUserRole();
+
+    socketInstance.emit('JoinRoom', { slug: slug, myname: currname, userId: currentUser }); // userId will be replaced with actual user ID
     setSocket(socketInstance);
 
 
@@ -270,6 +383,60 @@ const Page = () => {
       }
     })
 
+    // Listen for new message notifications (even when chat is closed)
+    socketInstance.on('newMessageNotification', (data) => {
+      if (!isChatOpen && data.user !== currentUser && currentUser) {
+        setHasUnreadMessages(true);
+        toast(`New message from ${data.user}`);
+      }
+    });
+
+    // Listen for incoming messages to updatje unread status
+    socketInstance.on('chatMessage', (message) => {
+      if (!isChatOpen) {
+        setHasUnreadMessages(true);
+      }
+    });
+
+    // Role management listeners
+    socketInstance.on('roleRequest', (data) => {
+      if (ownerForThisFunction) {
+        // Check if request already exists to prevent duplicates
+        setRoleRequests(prev => {
+          const exists = prev.some(req => req.requester === data.requester);
+          if (!exists) {
+            return [...prev, data];
+          }
+          return prev;
+        });
+        
+        // Only show toast if it's a new request
+        const existingRequest = roleRequests.find(req => req.requester === data.requester);
+        if (!existingRequest) {
+          toast(`${data.requester} is requesting editor role!`);
+        }
+      }
+    });
+
+    socketInstance.on('userRoleChanged', (data) => {
+      // console.log('I am running, Data: ', data);
+      if (data.user === currname) {
+        // console.log('Role assigned:', data.newRole);
+        toast.success(`👤 You are now ${data.newRole}`);
+        // Update the local user role state
+        setUserRole(data.newRole);
+        
+        // Refresh the user's role from database to ensure consistency
+        // setTimeout(() => {
+        //   fetchUserRole();
+        // }, 500);
+      }
+      else {
+        console.log('currentUser', currname)
+        toast.success(`👤 ${data.user} is now ${data.newRole}`);
+      }
+    });
+
 
 
     FetchCode(slug)
@@ -277,6 +444,12 @@ const Page = () => {
     // Clean up socket on unmount
     return () => {
       console.log('Disconnecting socket');
+      socketInstance.off('IncomingCode');
+      socketInstance.off('someoneJoined');
+      socketInstance.off('newMessageNotification');
+      socketInstance.off('chatMessage');
+      socketInstance.off('roleRequest');
+      socketInstance.off('userRoleChanged');
       socketInstance.disconnect();
     };
   }, []);
@@ -291,18 +464,25 @@ const Page = () => {
   // Components
   const Runbtn = () => {
     return (
-      <button className='btn-black rounded-lg  !px-4 flex items-center justify-center gap-2 !py-2 text-center'
-        onClick={() => RunCode(Code)}>
-        <img src="../run.svg" alt="" className='w-6' />
-        Run
+      <button 
+        className={`bg-black text-white px-6 py-2.5 rounded-lg border border-gray-700 flex items-center justify-center gap-3 font-medium transition-all duration-200 ${
+          userRole !== 'editor' && userRole !== 'owner' 
+            ? 'opacity-50 cursor-not-allowed' 
+            : 'hover:bg-gray-900 hover:border-gray-600 hover:shadow-lg hover:shadow-gray-900/20 active:scale-95'
+        }`}
+        onClick={() => RunCode(Code)}
+        disabled={userRole !== 'editor' && userRole !== 'owner'}
+      >
+        <img src="../run.svg" alt="" className='w-5 h-5' />
+        <span>Run</span>
       </button>
     )
   }
   const LoadingBtn = () => {
     return (
-      <button className='btn-black rounded-lg !px-4  animate-pulse flex items-center justify-center
-      cursor-not-allowed gap-2 transition-all' disabled={true}>
-        <img src="../loading.svg" alt="loading" className='w-4 h-4 animate-spin' /> Loading...
+      <button className='bg-black text-white px-6 py-2.5 rounded-lg border border-gray-700 flex items-center justify-center gap-3 font-medium animate-pulse cursor-not-allowed opacity-75' disabled={true}>
+        <img src="../loading.svg" alt="loading" className='w-4 h-4 animate-spin' />
+        <span>Loading...</span>
       </button>
     )
   }
@@ -312,49 +492,109 @@ const Page = () => {
 
 
   return (
-
-    <CodemeetLayout>
-
-      <Script src="https://cdn.lordicon.com/lordicon.js" />
+    <>
 
 
-      <div className='min-w-screen min-h-screen h-screen flex p-2 gap-3 overflow-y-hidden
+
+
+      <div className='min-w-screen min-h-screen h-screen flex p-2 gap-3 overflow-y-hidden md:overflow-auto
       '>
 
-        <div className="content_container w-full h-screen flex gap-3 ">
+        <div className="content_container w-full h-screen flex gap-3 md:flex-col">
 
 
           <Canvas >
 
             <div className='flex justify-between items-center px-4'>
+              {/* Role Management Section */}
+              <div className='flex items-center gap-4'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-sm text-gray-400'>Role:</span>
+                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                    userRole === 'editor' ? 'bg-blue-600 text-white' : 
+                    userRole === 'owner' ? 'bg-yellow-600 text-white' : 
+                    userRole === 'viewer' ? 'bg-gray-600 text-white' : 
+                    'bg-purple-600 text-white'
+                  }`}>
+                    {userRole === 'owner' ? '👑 Owner' : userRole.charAt(0).toUpperCase() + userRole.slice(1)}
+                  </span>
+                </div>
+                
+                {userRole === 'viewer' && !isOwner && (
+                  <button
+                    onClick={requestEditorRole}
+                    disabled={roleRequests.some(req => req.requester === currentUser)}
+                    className={`px-3 py-1 text-xs rounded-lg transition-colors ${
+                      roleRequests.some(req => req.requester === currentUser)
+                        ? 'bg-gray-400 cursor-not-allowed'
+                        : 'bg-blue-600 text-white hover:bg-blue-700'
+                    }`}
+                  >
+                    {roleRequests.some(req => req.requester === currentUser) 
+                      ? 'Request Pending...' 
+                      : 'Request Editor Role'
+                    }
+                  </button>
+                )}
+                
+                {isOwner && roleRequests && roleRequests.length > 0 && (
+                  <div className='flex items-center gap-2'>
+                    <span className='px-2 py-1 rounded-full text-xs font-medium bg-orange-600 text-white animate-pulse'>
+                      📝 {roleRequests.length} request{roleRequests.length > 1 ? 's' : ''}
+                    </span>
+                    <button
+                      onClick={() => setIsRoleRequestModalOpen(true)}
+                      className='px-3 py-1 text-xs rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors'
+                    >
+                      Manage Requests
+                    </button>
+                  </div>
+                )}
+              </div>
 
               <div className='flex items-center justify-center gap-8'>
 
-                <select name="language" id="langauge" onChange={onLanguageChange}
-                  className='text-8a8a93 bg-black p-2 px-4 border-gray rounded-lg' >
-                  <option value="javascript" >Javascript</option>
-                  <option value="c++">C++</option>
-                  <option value="c">C</option>
-                  <option value="java">Java</option>
-                  <option value="python">Python</option>
-                  <option value="go">Go</option>
-                  <option value="php">Php</option>
-                  <option value="HTML">HTML</option>
-                </select>
+                <div className="relative">
+                  <select 
+                    name="language" 
+                    id="language" 
+                    onChange={onLanguageChange}
+                    disabled={userRole !== 'editor' && userRole !== 'owner'}
+                    className={`appearance-none bg-black text-gray-300 px-4 py-2.5 pr-10 rounded-lg border border-gray-700 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 cursor-pointer text-sm font-medium ${
+                      userRole !== 'editor' && userRole !== 'owner' ? 'opacity-50 cursor-not-allowed' : 'hover:border-gray-600'
+                    }`}
+                  >
+                    <option value="javascript" className="bg-black text-gray-300">JavaScript</option>
+                    <option value="c++" className="bg-black text-gray-300">C++</option>
+                    <option value="c" className="bg-black text-gray-300">C</option>
+                    <option value="java" className="bg-black text-gray-300">Java</option>
+                    <option value="python" className="bg-black text-gray-300">Python</option>
+                    <option value="go" className="bg-black text-gray-300">Go</option>
+                    <option value="php" className="bg-black text-gray-300">PHP</option>
+                    <option value="HTML" className="bg-black text-gray-300">HTML</option>
+                  </select>
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </div>
 
 
-                <button onClick={SaveCode} disabled={disableSave} className={`
-                  ${disableSave ? 'animate-pulse cursor-not-allowed' : ''}
-                `}>
+                <button 
+                  onClick={SaveCode} 
+                  disabled={disableSave || userRole !== 'editor' && userRole !== 'owner'} 
+                  className={`
+                    bg-black text-white px-6 py-2.5 rounded-lg border border-gray-700 flex items-center justify-center gap-3 font-medium transition-all duration-200 ${
+                      disableSave || userRole !== 'editor' && userRole !== 'owner' 
+                        ? 'animate-pulse cursor-not-allowed opacity-50' 
+                        : 'hover:bg-gray-900 hover:border-gray-600 hover:shadow-lg hover:shadow-gray-900/20 active:scale-95'
+                    }
+                  `}
+                >
 
-                  {/* <img src="../save.gif" alt="save img" className='w-8  save-btn invert' /> */}
-                  <lord-icon
-                    src="https://cdn.lordicon.com/ifyskbjd.json"
-                    trigger="click"
-                    stroke="bold"
-                    colors="primary:#4f1091,secondary:#2516c7"
-                    >
-                  </lord-icon>
+                  <Save className="w-5 h-5 text-white" />
+                  <span>Save</span>
                 </button>
               </div>
 
@@ -363,18 +603,32 @@ const Page = () => {
 
 
               {currlanguage === 'HTML' ? (
-                <button className='btn-black rounded-lg !px-4'
-                  onClick={null}>
-                  Build
+                <button 
+                  className={`bg-black text-white px-6 py-2.5 rounded-lg border border-gray-700 flex items-center justify-center gap-3 font-medium transition-all duration-200 ${
+                    userRole !== 'editor' && userRole !== 'owner' 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'hover:bg-gray-900 hover:border-gray-600 hover:shadow-lg hover:shadow-gray-900/20 active:scale-95'
+                  }`}
+                  onClick={null}
+                  disabled={userRole !== 'editor' && userRole !== 'owner'}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                  <span>Build</span>
                 </button>
               ) : (
                 loading ? <LoadingBtn /> : (<Runbtn />)
               )}
 
             </div>
-            <CodeEditor onChange={onCodeChange} Code={Code} language={currlanguage} />
+
+
+            <CodeEditor onChange={onCodeChange} Code={Code} language={currlanguage} isEditable={userRole === 'editor' || userRole === 'owner'} />
 
           </Canvas >
+
 
           {currlanguage === 'HTML' ? (
             <Canvas value={'HTML'}>
@@ -400,8 +654,39 @@ const Page = () => {
       </div>
 
 
-      <Navbarmeet bringpreview={bringCanvas} bringEdittor={bringEdittor} meetid={meetid} />
-    </CodemeetLayout>
+      <Navbarmeet 
+        bringpreview={bringCanvas} 
+        bringEdittor={bringEdittor} 
+        meetid={meetid} 
+        toggleChat={toggleChat}
+        hasUnreadMessages={hasUnreadMessages}
+        userRole={userRole}
+        isOwner={isOwner}
+        roleRequests={roleRequests}
+      />
+
+      <ChatModal
+        isOpen={isChatOpen}
+        onClose={() => setIsChatOpen(false)}
+        socket={socket}
+        meetid={meetid}
+        currentUser={currentUser}
+        userRole={userRole}
+        isOwner={isOwner}
+        roleRequests={roleRequests}
+      />
+
+      <RoleRequestModal
+        isOpen={isRoleRequestModalOpen}
+        onClose={() => setIsRoleRequestModalOpen(false)}
+        roleRequests={roleRequests}
+        onApprove={handleApproveRole}
+        onDeny={handleDenyRole}
+        currentUser={currentUser}
+      />
+
+    </>
+
 
   )
 }

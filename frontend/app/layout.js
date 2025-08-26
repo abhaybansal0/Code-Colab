@@ -1,6 +1,7 @@
 import localFont from "next/font/local";
 import "./globals.css";
 import { Toaster } from 'react-hot-toast';
+import Image from "next/image";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -55,19 +56,24 @@ export default function RootLayout({ children }) {
             },
             error: {
               style: {
-                backgroundcolor: 'rgba(255, 255, 255, 0.1) !important',
+                backgroundColor: 'rgba(255, 255, 255, 0.1) !important',
                 color: 'black', // White text
               },
             },
           }}
         />
 
+          {/* // Backgound Grid */}
         <div className="absolute -z-10 w-screen h-screen">
-          <img src="../grid.svg" alt="grid" className="w-screen h-screen" />
+
+          <Image src="/grid.svg" alt="grid" layout="fill" objectFit="cover" priority />
+
         </div>
+
+
         {children}
 
-        
+
       </body>
 
     </html>

@@ -79,8 +79,13 @@ body {
   transition: all 0.2s ease-in-out;
 }
 
+.text-hover{
+  color: #8a8a93;
+  transition: all 0.2s ease-in-out;
+}
 
-.text-8a8a93:hover{
+
+.text-hover:hover{
   color: #e3e3ec;
 }
 
