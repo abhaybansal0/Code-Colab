@@ -25,7 +25,8 @@ router.post('/', async (req, res) => {
         const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET)
 
         const adminId = decodedToken.id; 
-        console.log(adminId);
+        const adminUsername = decodedToken.username || 'Anonymous';
+        console.log(adminId, adminUsername);
         
         
         
@@ -37,6 +38,7 @@ router.post('/', async (req, res) => {
         const newMeet = await new Meeting({
             meetId: meetId,
             adminId: adminId,
+            adminUsername: adminUsername,
             codebase: codebase
         })
         

@@ -19,13 +19,17 @@ router.post('/', async (req, res) => {
             }
             return res.status(200).send({
                 message: 'Meeting details fetched successfully!',
-                meeting: {
-                    meetId: meeting.meetId,
-                    adminId: meeting.adminId,
-                    codebase: meeting.codebase,
-                    editors: meeting.editors,
-                    messages: meeting.messages
-                },
+                            meeting: {
+                meetId: meeting.meetId,
+                roomName: meeting.roomName,
+                adminId: meeting.adminId,
+                adminUsername: meeting.adminUsername,
+                codebase: meeting.codebase,
+                editors: meeting.editors,
+                messages: meeting.messages,
+                createdAt: meeting.createdAt,
+                updatedAt: meeting.updatedAt
+            },
                 userRole: 'viewer',
                 isOwner: false
             })
@@ -68,11 +72,14 @@ router.post('/', async (req, res) => {
             message: 'Meeting details fetched successfully!',
             meeting: {
                 meetId: meeting.meetId,
+                roomName: meeting.roomName,
                 adminId: meeting.adminId,
+                adminUsername: meeting.adminUsername,
                 codebase: meeting.codebase,
                 editors: editors,
                 messages: meeting.messages,
-                
+                createdAt: meeting.createdAt,
+                updatedAt: meeting.updatedAt
             },
             userRole: userRole,
             isOwner: isOwner

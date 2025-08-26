@@ -185,8 +185,6 @@ export default function Home() {
 
             <LoadingScreen showLoading={showLoading} />
 
-            <Profile show_Profile={showProfile} user_info={userInfo} />
-
             <Navbar
                 Join_Hide_Show_Handler={Join_Hide_Show}
                 Start_Hide_Show_Handler={Start_Hide_Show}

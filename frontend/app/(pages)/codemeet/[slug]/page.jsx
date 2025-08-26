@@ -58,6 +58,8 @@ const Page = () => {
   const [roleRequests, setRoleRequests] = useState([]);
   const [isRoleRequestModalOpen, setIsRoleRequestModalOpen] = useState(false);
   const [showRoleRequestCard, setShowRoleRequestCard] = useState(false);
+  const [showRoomNamePrompt, setShowRoomNamePrompt] = useState(false);
+  const [newRoomName, setNewRoomName] = useState('');
 
 
 
@@ -321,6 +323,30 @@ const Page = () => {
     assignRole(username, 'viewer');
   };
 
+  const handleUpdateRoomName = async () => {
+    if (!newRoomName.trim()) {
+      toast.error('Room name cannot be empty');
+      return;
+    }
+
+    try {
+
+      await axios.put('/api/meetings/updateroomname', {
+        meetId: meetid,
+        roomName: newRoomName.trim()
+      }, {
+        withCredentials: true
+      });
+
+      toast.success('Room name updated successfully!');
+      setShowRoomNamePrompt(false);
+      setNewRoomName('');
+    } catch (error) {
+      console.error('Error updating room name:', error);
+      toast.error('Failed to update room name');
+    }
+  };
+
 
 
 
@@ -348,10 +374,15 @@ const Page = () => {
           username: currname 
         });
         console.log('response.data', response.data)
-        const { userRole: role, isOwner: owner } = response.data;
+        const { userRole: role, isOwner: owner, meeting } = response.data;
         setUserRole(role);
         setIsOwner(owner);
         ownerForThisFunction = owner
+
+        // Show room name prompt for owners if room doesn't have a name
+        if (owner && (!meeting?.roomName || meeting.roomName === 'Untitled Room')) {
+          setShowRoomNamePrompt(true);
+        }
       } catch (error) {
         console.log('Error fetching user role:', error);
         // Default to viewer if API fails
@@ -681,6 +712,66 @@ const Page = () => {
         onDeny={handleDenyRole}
         currentUser={currentUser}
       />
+
+      {/* Room Name Prompt Modal */}
+      {showRoomNamePrompt && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 max-w-md mx-4">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">Name Your Chatroom</h3>
+              <p className="text-sm text-gray-600">
+                Give your meeting room a memorable name so it's easier to find in your profile.
+              </p>
+            </div>
+
+            <div className="mb-6">
+              <label htmlFor="roomName" className="block text-sm font-medium text-gray-700 mb-2">
+                Room Name
+              </label>
+              <input
+                type="text"
+                id="roomName"
+                value={newRoomName}
+                onChange={(e) => setNewRoomName(e.target.value)}
+                placeholder="e.g., Team Project, Code Review, Learning Session"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                maxLength={50}
+              />
+              <p className="text-xs text-gray-500 mt-1">
+                {newRoomName.length}/50 characters
+              </p>
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                  if (newRoomName.trim()) {
+                    handleUpdateRoomName();
+                  } else {
+                    setShowRoomNamePrompt(false);
+                  }
+                }}
+                className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors font-medium"
+              >
+                {newRoomName.trim() ? 'Save & Continue' : 'Skip for Now'}
+              </button>
+              {newRoomName.trim() && (
+                <button
+                  onClick={() => setShowRoomNamePrompt(false)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors font-medium"
+                >
+                  Cancel
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Role Request Notification Badge */}
       {isOwner && roleRequests && roleRequests.length > 0 && (

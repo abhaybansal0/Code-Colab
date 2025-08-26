@@ -23,9 +23,9 @@ const Navbar = ({ Join_Hide_Show_Handler, Start_Hide_Show_Handler, userProfile }
                             <li>Edditor</li>
                         </Link>
 
-                        <button onClick={userProfile}>
+                        <Link href="/profile">
                             <li>Profile</li>
-                        </button>
+                        </Link>
                     </ul>
                 </div>
                 <div className="buttons flex gap-2 p-1.5">

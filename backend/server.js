@@ -21,6 +21,9 @@ import fetchmeet from './meetings/fetchmeeet/reoute.js';
 import mymeetings from './meetings/mymeetings/route.js';
 import getmeetdetails from './meetings/getmeetdetails/route.js';
 import savemessage from './meetings/savemessage/route.js';
+import profileRoute from './user/profile/route.js';
+import updateRoomName from './meetings/updateroomname/route.js';
+import deleteMeeting from './meetings/deletemeeting/route.js';
 
 
 
@@ -71,6 +74,13 @@ app.use('/api/meetings/fetchmeet', fetchmeet)
 app.use('/api/mymeetings', mymeetings)
 app.use('/api/meetings/getmeetdetails', getmeetdetails)
 app.use('/api/meetings/savemessage', savemessage)
+
+/// User Routes
+app.use('/api/user/profile', profileRoute)
+
+/// Meeting Management Routes
+app.use('/api/meetings/updateroomname', updateRoomName)
+app.use('/api/meetings/deletemeeting', deleteMeeting)
 
 
 
