@@ -26,13 +26,10 @@ const CodeEditor = dynamic(() => import('./_comps/CodeEdittor'), { ssr: false })
 const Page = () => {
 
 
-  // const router = useRouter()
-
-
-  // const myname = useRef(currname)
-
+  const router = useRouter()
+  const params = useParams()
   
-  const slug = window.location.pathname.split('/')[2];
+  const slug = params.slug;
   const [meetid, setMeetid] = useState(slug)
 
   // States //
@@ -155,9 +152,10 @@ const Page = () => {
         "codebase": Code,
         "username": currentUser
       }
+      console.log('userdetail', userdetail)
       const response = await axios.post('/api/meetings/updatemeet', userdetail);
 
-      console.log(response.data)
+      console.log(response)
       toast.success('Code Saved Successfully! ');
 
       setTimeout(() => {
@@ -167,8 +165,8 @@ const Page = () => {
 
     } catch (error) {
       setDisableSave(false)
-      // console.log(error.message)
-      toast.error('Only Admin Can Save The Codebase! ')
+      console.log('error', error.message)
+      toast.error('Only Admin and approved editors can save the codebase! ')
     }
   }
 
@@ -356,13 +354,13 @@ const Page = () => {
 
   useEffect(() => {
     // Connect to the Socket.IO server
-    const params = new URLSearchParams(window.location.search);
-    const currname = params.get("myname");
+    const searchParams = new URLSearchParams(window.location.search);
+    const currname = searchParams.get("myname");
     setCurrentUser(currname || 'Anonymous');
     console.log('currentUser: ', currname)
     const socketInstance = io(process.env.NEXT_PUBLIC_BACKEND_DOMAIN); // Backend URL
 
-    const slug = window.location.pathname.split('/')[2]
+    const slug = meetid;
     setMeetid(slug)
     let ownerForThisFunction = false
 

@@ -17,27 +17,21 @@ router.post('/', async (req, res) => {
             return res.status(400).send({message: 'Username is required'})
         }
 
-
-
-        const updatedMeetDetails = await Meeting.findOneAndUpdate({ meetId: meetId, adminId: username },
+        
+        await Meeting.findOneAndUpdate({ meetId: meetId, username: username },
             {
                 codebase: codebase
             })
-
-        if(!updatedMeetDetails){
-            return res.status(400).send({message: 'Only Admin Can Save The codebase'})
-        }
-
-        // console.log('Updated Meeting details', updatedMeetDetails);
+            
             
         res.status(200).send({
                 message: 'Meeting Data saved Successfully!',
-                updatedMeetDetails
             })
         
             
 
     } catch (error) {
+        console.log('error', error)
         res.status(400).send({ error: "Only Admin Can Save The codebase" })
     }
 
