@@ -725,7 +725,7 @@ const Page = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Name Your Chatroom</h3>
               <p className="text-sm text-gray-600">
-                Give your meeting room a memorable name so it's easier to find in your profile.
+                Give your meeting room a memorable name so it&apos;s easier to find in your profile.
               </p>
             </div>
 
